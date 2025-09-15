@@ -10,3 +10,8 @@ The backend API for this project is deployed on Render:
 Available routes:
 - `/api/products`
 - `/api/categories`
+
+# E-Mart - Full Stack E-commerce App
+
+Check out the live demo here: [E-Mart Live](https://e-mart-mystore.vercel.app/)
+
