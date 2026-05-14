@@ -2,7 +2,8 @@ const express = require('express');
 const router = express.Router();
 const Category = require('../models/category');
 const cloudinary = require('cloudinary').v2;
-const pLimit = require('p-limit');
+const _pLimit = require('p-limit');
+const pLimit = typeof _pLimit === 'function' ? _pLimit : _pLimit.default;
 
 // Cloudinary config (make sure .env vars are loaded in your main app)
 cloudinary.config({
@@ -113,6 +114,20 @@ router.post('/create', async (req, res) => {
 
 
 
+
+// POST create category with pre-hosted image URLs (no Cloudinary upload)
+router.post('/seed', async (req, res) => {
+  try {
+    const { name, color, images } = req.body;
+    if (!name || !Array.isArray(images) || images.length === 0) {
+      return res.status(400).json({ success: false, message: 'Name and images are required.' });
+    }
+    const category = await Category.create({ name, images, color: color || '#f1f5f9' });
+    return res.status(201).json(category);
+  } catch (err) {
+    return res.status(500).json({ success: false, error: err.message });
+  }
+});
 
 router.put('/:id', async (req, res) => {
   try {
