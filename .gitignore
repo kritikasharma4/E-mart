@@ -1,0 +1,18 @@
+# Backend
+node_modules/
+.env
+
+# Frontend builds
+e-commerce/e-com/node_modules/
+e-commerce/e-com/build/
+e-commerce/e-com/.env
+
+Dashboard/admin/node_modules/
+Dashboard/admin/build/
+Dashboard/admin/.env
+
+# Vercel
+.vercel
+
+# OS
+.DS_Store
