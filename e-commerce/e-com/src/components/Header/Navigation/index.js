@@ -1,248 +1,102 @@
-import Button from "@mui/material/Button";
 import { IoMenu } from "react-icons/io5";
 import { FaAngleDown } from "react-icons/fa";
+import { IoClose } from "react-icons/io5";
 import { Link } from "react-router-dom";
-import { IoHome } from "react-icons/io5";
-import { GiClothes } from "react-icons/gi";
-import { IoIosTv } from "react-icons/io";
-import { GiCakeSlice } from "react-icons/gi";
-import { MdLocalGroceryStore } from "react-icons/md";
-import { FaBlogger } from "react-icons/fa";
-import { IoMdContact } from "react-icons/io";
 import { useState } from "react";
-import { SlArrowRight } from "react-icons/sl";
+
+const navLinks = [
+  { label: "Home", to: "/", sub: [] },
+  {
+    label: "Men", to: "#", sub: [
+      { label: "Clothing", to: "/" },
+      { label: "Footwear", to: "/" },
+      { label: "Watches", to: "/" },
+      { label: "Accessories", to: "/" },
+    ]
+  },
+  {
+    label: "Women", to: "#", sub: [
+      { label: "Clothing", to: "/" },
+      { label: "Footwear", to: "/" },
+      { label: "Watches", to: "/" },
+      { label: "Bags", to: "/" },
+    ]
+  },
+  {
+    label: "Kids", to: "#", sub: [
+      { label: "Boys", to: "/" },
+      { label: "Girls", to: "/" },
+      { label: "Toys", to: "/" },
+    ]
+  },
+  { label: "Electronics", to: "#", sub: [
+      { label: "Mobiles", to: "/" },
+      { label: "Laptops", to: "/" },
+      { label: "Cameras", to: "/" },
+    ]
+  },
+  { label: "Beauty", to: "#", sub: [
+      { label: "Skincare", to: "/" },
+      { label: "Makeup", to: "/" },
+      { label: "Fragrances", to: "/" },
+    ]
+  },
+  { label: "Contact Us", to: "#", sub: [] },
+];
 
 const Navigation = () => {
-
-  const [isOpenSidebarVal,setisOpenSidebarVal]=useState();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <nav>
+    <div className="nav">
       <div className="container">
-        <div className="row">
-          <div className="col-sm-2 navPart1">
-            <div className="catWrapper">
-              <Button className="allCatTab align-items-center" onClick={()=>setisOpenSidebarVal(!isOpenSidebarVal)}>
-                <span className="icon1" style={{ marginRight: "8px" }}>
-                  <IoMenu />
-                </span>
-                <span className="text">All CATEGORIES</span>
-                <span className="icon2" style={{ marginLeft: "8px" }}>
-                  <FaAngleDown />
-                </span>
-              </Button>
-              <div className={`sidebarNav ${isOpenSidebarVal ? "open" : ""}`}>
-                <ul>
-                  <li><Link to="/">
-                    <Button>Men<SlArrowRight className="ml-auto"/></Button>
-                  </Link>
-                  <div className="submenu">
-                  <Link to="/">
-                    <Button>clothing</Button>
-                  </Link>
-                  <Link to="/">
-                    <Button>Footwear</Button>
-                  </Link>
-                  <Link to="/">
-                    <Button>Watches</Button>
-                  </Link>
-                  <Link to="/">
-                    <Button>clothing</Button>
-                  </Link>
-                  <Link to="/">
-                    <Button>Footwear</Button>
-                  </Link>
-                  </div>
-                  </li>
-                <li><Link to="/">
-                    <Button>Women<SlArrowRight className="ml-auto"/></Button>
-                  </Link>
-                  <div className="submenu">
-                  <Link to="/">
-                    <Button>clothing</Button>
-                  </Link>
-                  <Link to="/">
-                    <Button>Footwear</Button>
-                  </Link>
-                  <Link to="/">
-                    <Button>Watches</Button>
-                  </Link>
-                  <Link to="/">
-                    <Button>clothing</Button>
-                  </Link>
-                  <Link to="/">
-                    <Button>Footwear</Button>
-                  </Link>
-                  </div>
-                  </li>
-                  <li><Link to="/">
-                    <Button>Watches</Button>
-                  </Link></li>
-                  <li><Link to="/">
-                    <Button>Kids</Button>
-                  </Link></li>
-                  <li><Link to="/">
-                    <Button>clothing</Button>
-                  </Link></li>
-                  <li><Link to="/">
-                    <Button>Footwear</Button>
-                  </Link></li>
-                  <li><Link to="/">
-                    <Button>Beauty</Button>
-                  </Link></li>
-                </ul>
-              </div>
+        <button className="allCatTab" onClick={() => setSidebarOpen(true)}>
+          <IoMenu />
+          <span className="text">All Categories</span>
+          <FaAngleDown />
+        </button>
 
-            </div>
-          </div>
-
-          <div className="col-sm-10 navPart2 d-flex align-items-center">
-            <ul className="list list-inline w-100 ml-auto">
-              <li className="list-inline-item">
-                <Link to="/">
-                  <IoHome /> &nbsp; Home
+        <div className="navPart2">
+          <ul>
+            {navLinks.map((link) => (
+              <li key={link.label}>
+                <Link to={link.to}>
+                  {link.label}
+                  {link.sub.length > 0 && <FaAngleDown style={{ marginLeft: 4, fontSize: 11 }} />}
                 </Link>
+                {link.sub.length > 0 && (
+                  <ul className="submenu">
+                    {link.sub.map((s) => (
+                      <li key={s.label}><Link to={s.to}>{s.label}</Link></li>
+                    ))}
+                  </ul>
+                )}
               </li>
-              <li className="list-inline-item">
-                <Link to="/">
-                  <GiClothes /> &nbsp;Men
-                </Link>
-                <div className="submenu">
-                  <Link to="/">
-                    <Button>clothing</Button>
-                  </Link>
-                  <Link to="/">
-                    <Button>Footwear</Button>
-                  </Link>
-                  <Link to="/">
-                    <Button>Watches</Button>
-                  </Link>
-                  <Link to="/">
-                    <Button>clothing</Button>
-                  </Link>
-                  <Link to="/">
-                    <Button>Footwear</Button>
-                  </Link>
-                  <Link to="/">
-                    <Button>Watches</Button>
-                  </Link>
-                </div>
-              </li>
-              <li className="list-inline-item">
-                <Link to="/">
-                  <IoIosTv /> &nbsp;Women
-                </Link>
-                <div className="submenu">
-                  <Link to="/">
-                    <Button>clothing</Button>
-                  </Link>
-                  <Link to="/">
-                    <Button>Footwear</Button>
-                  </Link>
-                  <Link to="/">
-                    <Button>Watches</Button>
-                  </Link>
-                  <Link to="/">
-                    <Button>clothing</Button>
-                  </Link>
-                  <Link to="/">
-                    <Button>Footwear</Button>
-                  </Link>
-                  <Link to="/">
-                    <Button>Watches</Button>
-                  </Link>
-                </div>
-              </li>
-              <li className="list-inline-item">
-                <Link to="/">
-                  <GiCakeSlice /> &nbsp;Beauty
-                </Link>
-                <div className="submenu">
-                  <Link to="/">
-                    <Button>clothing</Button>
-                  </Link>
-                  <Link to="/">
-                    <Button>Footwear</Button>
-                  </Link>
-                  <Link to="/">
-                    <Button>Watches</Button>
-                  </Link>
-                  <Link to="/">
-                    <Button>clothing</Button>
-                  </Link>
-                  <Link to="/">
-                    <Button>Footwear</Button>
-                  </Link>
-                  <Link to="/">
-                    <Button>Watches</Button>
-                  </Link>
-                  <Link to="/">
-                    <Button>Footwear</Button>
-                  </Link>
-                  <Link to="/">
-                    <Button>Watches</Button>
-                  </Link>
-                </div>
-              </li>
-              <li className="list-inline-item">
-                <Link to="/">
-                  <MdLocalGroceryStore /> &nbsp;Watches
-                </Link>
-                <div className="submenu">
-                  <Link to="/">
-                    <Button>clothing</Button>
-                  </Link>
-                  <Link to="/">
-                    <Button>Footwear</Button>
-                  </Link>
-                  <Link to="/">
-                    <Button>Watches</Button>
-                  </Link>
-                </div>
-              </li>
-              <li className="list-inline-item">
-                <Link to="/">
-                  <FaBlogger /> &nbsp;Kids
-                </Link>
-                <div className="submenu">
-                  <Link to="/">
-                    <Button>clothing</Button>
-                  </Link>
-                  <Link to="/">
-                    <Button>Footwear</Button>
-                  </Link>
-                  <Link to="/">
-                    <Button>Watches</Button>
-                  </Link>
-                  <Link to="/">
-                    <Button>clothing</Button>
-                  </Link>
-                  <Link to="/">
-                    <Button>Footwear</Button>
-                  </Link>
-                </div>
-              </li>
-              <li className="list-inline-item">
-                <Link to="/">
-                  <IoMdContact /> &nbsp;Contact Us
-                </Link>
-                <div className="submenu">
-                  <Link to="/">
-                    <Button>clothing</Button>
-                  </Link>
-                  <Link to="/">
-                    <Button>Footwear</Button>
-                  </Link>
-                  <Link to="/">
-                    <Button>Watches</Button>
-                  </Link>
-                </div>
-              </li>
-            </ul>
-          </div>
+            ))}
+          </ul>
         </div>
       </div>
-    </nav>
+
+      {/* Mobile sidebar */}
+      {sidebarOpen && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)", zIndex: 499 }} onClick={() => setSidebarOpen(false)} />
+      )}
+      <div className={`sidebarNav ${sidebarOpen ? "open" : ""}`}>
+        <div className="head">
+          <h2>All Categories</h2>
+          <button className="closeBtn" onClick={() => setSidebarOpen(false)}><IoClose /></button>
+        </div>
+        <ul>
+          {navLinks.map((link) => (
+            <li key={link.label}>
+              <Link to={link.to} onClick={() => setSidebarOpen(false)}>
+                {link.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
   );
 };
 
