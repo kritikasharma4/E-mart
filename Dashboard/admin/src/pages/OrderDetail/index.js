@@ -147,7 +147,6 @@ const OrderDetail = () => {
   }
 
   const meta = STATUS_META[order.status] || STATUS_META.Pending;
-  const discount = order.itemsTotal - (order.totalPrice - order.shippingPrice);
 
   return (
     <div className="content w-100 p-4">
