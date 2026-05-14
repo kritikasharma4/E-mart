@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = process.env.REACT_APP_BASE_URL || "https://e-commm-ui4k.onrender.com";
+const BASE_URL = process.env.REACT_APP_BASE_URL || "https://e-mart-backend-5ake.onrender.com";
 
 export const fetchDataFromApi = async (url) => {
   try {
