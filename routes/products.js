@@ -42,6 +42,32 @@ router.get('/featured', async (req, res) => {
   }
 });
 
+// POST seed — saves product directly with pre-provided image URLs (no Cloudinary upload)
+router.post('/seed', async (req, res) => {
+  try {
+    const category = await Category.findById(req.body.category);
+    if (!category) return res.status(400).json({ success: false, message: 'Invalid category ID' });
+
+    const product = new Product({
+      name: req.body.name,
+      description: req.body.description,
+      brand: req.body.brand || '',
+      price: req.body.price,
+      oldPrice: req.body.oldPrice || 0,
+      images: req.body.images,
+      category: req.body.category,
+      countInStock: req.body.countInStock,
+      rating: req.body.rating || 0,
+      isFeatured: req.body.isFeatured || false,
+    });
+
+    const saved = await product.save();
+    res.status(201).json(saved);
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 // POST create a new product
 router.post('/create', async (req, res) => {
   try {
