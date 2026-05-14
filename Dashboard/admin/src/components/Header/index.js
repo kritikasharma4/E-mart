@@ -20,11 +20,7 @@ import { Link } from "react-router-dom";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import ListItemIcon from "@mui/material/ListItemIcon";
 import Divider from "@mui/material/Divider";
-import PersonAdd from "@mui/icons-material/PersonAdd";
-import Settings from "@mui/icons-material/Settings";
-import Logout from "@mui/icons-material/Logout";
 import { MyContext } from "../../App";
 
 const Search = styled("div")(({ theme }) => ({
@@ -57,7 +53,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 }));
 
 const Header = () => {
-  const [accountAnchor, setAccountAnchor] = useState(null);
   const [notifyAnchor, setNotifyAnchor] = useState(null);
   const [cartAnchor, setCartAnchor] = useState(null);
   const [mailAnchor, setMailAnchor] = useState(null);
