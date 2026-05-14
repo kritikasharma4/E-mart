@@ -1,128 +1,58 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import RangeSlider from "react-range-slider-input";
 import "react-range-slider-input/dist/style.css";
-import { Link } from "react-router-dom";
+
+const categories = ["Men", "Women", "Kids", "Beauty", "Electronics", "Sports"];
+const brands = ["Nike", "Adidas", "H&M", "Zara", "Puma", "Levi's"];
 
 const Sidebar = () => {
-  const [value, setValue] = useState([100, 60000]);
+  const [priceRange, setPriceRange] = useState([100, 60000]);
 
   return (
-    <>
-      <div className="sidebar">
-        <div className="sticky">
-          <div className="filterBox">
-            <h6>PRODUCT CATEGORIES</h6>
+    <div className="em-filter-panel">
+      <h3>Filters</h3>
 
-            <div className="scroll">
-              <ul>
-                <li>
-                  <FormControlLabel control={<Checkbox />} label="Men" />
-                </li>
-                <li>
-                  <FormControlLabel control={<Checkbox />} label="Women" />
-                </li>
-                <li>
-                  <FormControlLabel control={<Checkbox />} label="Beauty" />
-                </li>
-                <li>
-                  <FormControlLabel control={<Checkbox />} label="Kids" />
-                </li>
-                <li>
-                  <FormControlLabel control={<Checkbox />} label="Women" />
-                </li>
-                <li>
-                  <FormControlLabel control={<Checkbox />} label="Beauty" />
-                </li>
-                <li>
-                  <FormControlLabel control={<Checkbox />} label="Kids" />
-                </li>
-                <li>
-                  <FormControlLabel control={<Checkbox />} label="Women" />
-                </li>
-                <li>
-                  <FormControlLabel control={<Checkbox />} label="Beauty" />
-                </li>
-                <li>
-                  <FormControlLabel control={<Checkbox />} label="Kids" />
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="filterBox ">
-            <h6>FILTER BY PRICE</h6>
-
-            <RangeSlider
-              value={value}
-              onInput={setValue}
-              min={100}
-              max={60000}
-              step={5}
-            />
-
-            <div className="d-flex pt-2 pb-2 priceRange">
-              <span>
-                From: <strong className="text-dark">Rs: {value[0]}</strong>
-              </span>
-              <span className="ml-auto">
-                To: <strong className="text-dark">Rs: {value[1]}</strong>
-              </span>
-            </div>
-          </div>
-
-          <div className="filterBox">
-            <h6>PRODUCT STATUS</h6>
-
-            <div className="scroll">
-              <ul>
-                <li>
-                  <FormControlLabel control={<Checkbox />} label="In Stock" />
-                </li>
-                <li>
-                  <FormControlLabel control={<Checkbox />} label="On Sale" />
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="filterBox">
-            <h6>BRANDS</h6>
-
-            <div className="scroll">
-              <ul>
-                <li>
-                  <FormControlLabel control={<Checkbox />} label="Frito Lay" />
-                </li>
-                <li>
-                  <FormControlLabel control={<Checkbox />} label="Oreo" />
-                </li>
-                <li>
-                  <FormControlLabel control={<Checkbox />} label="Quaker" />
-                </li>
-                <li>
-                  <FormControlLabel control={<Checkbox />} label="Welch's" />
-                </li>
-                <li>
-                  <FormControlLabel control={<Checkbox />} label="Nespresso" />
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <br />
-
-        <Link to="#">
-          <img
-            src="https://api.spicezgold.com/download/file_1734525767798_NewProject(35).jpg"
-            className="w-100"
-            alt="Promo banner"
-          />
-        </Link>
+      <div className="em-filter-group">
+        <span className="em-filter-label">Categories</span>
+        <ul style={{ maxHeight: 220, overflowY: "auto" }}>
+          {categories.map(c => (
+            <li key={c}>
+              <FormControlLabel control={<Checkbox size="small" />} label={c} />
+            </li>
+          ))}
+        </ul>
       </div>
-    </>
+
+      <div className="em-filter-group">
+        <span className="em-filter-label">Price Range</span>
+        <RangeSlider value={priceRange} onInput={setPriceRange} min={100} max={60000} step={100} />
+        <div className="em-price-range">
+          <span>₹{priceRange[0].toLocaleString()}</span>
+          <span>₹{priceRange[1].toLocaleString()}</span>
+        </div>
+      </div>
+
+      <div className="em-filter-group">
+        <span className="em-filter-label">Availability</span>
+        <ul>
+          <li><FormControlLabel control={<Checkbox size="small" />} label="In Stock" /></li>
+          <li><FormControlLabel control={<Checkbox size="small" />} label="On Sale" /></li>
+        </ul>
+      </div>
+
+      <div className="em-filter-group">
+        <span className="em-filter-label">Brands</span>
+        <ul>
+          {brands.map(b => (
+            <li key={b}>
+              <FormControlLabel control={<Checkbox size="small" />} label={b} />
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
   );
 };
 

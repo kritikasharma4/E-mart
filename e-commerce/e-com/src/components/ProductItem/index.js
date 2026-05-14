@@ -1,71 +1,55 @@
-import { Button } from "@mui/material";
+import { useContext } from "react";
+import { Link } from "react-router-dom";
 import Rating from "@mui/material/Rating";
 import { BsArrowsFullscreen } from "react-icons/bs";
 import { FaRegHeart } from "react-icons/fa";
-import { useContext } from "react";
-import { Link } from "react-router-dom";
 import { MyContext } from "../../App";
 
 const ProductItem = ({ product }) => {
   const context = useContext(MyContext);
-
   if (!product) return null;
 
   const { _id, name, images, countInStock, rating, price, oldPrice } = product;
+  const discount = oldPrice && price < oldPrice
+    ? Math.round(((oldPrice - price) / oldPrice) * 100) : null;
 
-  const discountPct =
-    oldPrice && price < oldPrice
-      ? Math.round(((oldPrice - price) / oldPrice) * 100)
-      : null;
-
-  const handleExpand = (e) => {
+  const handleQuickView = (e) => {
     e.preventDefault();
     context.setIsOpenProductModal(true);
     context.setModalProduct?.(product);
   };
 
-  const handleWishlist = (e) => {
-    e.preventDefault();
-  };
-
   return (
-    <Link to={`/product/${_id}`} className="productItem">
-      <div className="imgWrapper">
+    <Link to={`/product/${_id}`} className="em-product-card">
+      <div className="em-card-img">
         <img
-          src={images?.[0] || "https://via.placeholder.com/300x400?text=No+Image"}
+          src={images?.[0] || "https://via.placeholder.com/300?text=No+Image"}
           alt={name || "Product"}
         />
-        {discountPct !== null && (
-          <span className="badge-custom">{discountPct}% OFF</span>
-        )}
-        <div className="actions">
-          <Button onClick={handleExpand} title="Quick view">
+        {discount && <span className="em-card-badge">{discount}% OFF</span>}
+        {!countInStock && <span className="em-card-badge out">Out of Stock</span>}
+        <div className="em-card-actions">
+          <button className="em-card-action-btn" onClick={handleQuickView} title="Quick View">
             <BsArrowsFullscreen />
-          </Button>
-          <Button onClick={handleWishlist} title="Wishlist">
-            <FaRegHeart style={{ fontSize: "18px" }} />
-          </Button>
+          </button>
+          <button className="em-card-action-btn" onClick={e => e.preventDefault()} title="Wishlist">
+            <FaRegHeart />
+          </button>
         </div>
       </div>
-
-      <div className="info">
-        <h4>{name || "Unnamed Product"}</h4>
-        <span className={`stock-badge ${countInStock > 0 ? "in" : "out"}`}>
-          {countInStock > 0 ? "In Stock" : "Out of Stock"}
+      <div className="em-card-body">
+        <div className="em-card-name">{name || "Unnamed Product"}</div>
+        <div className="em-card-rating">
+          <Rating value={rating || 0} precision={0.5} readOnly size="small" />
+        </div>
+        <span className={`em-card-stock ${countInStock > 0 ? "in" : "out"}`}>
+          {countInStock > 0 ? `In Stock (${countInStock})` : "Out of Stock"}
         </span>
-        <Rating
-          name="rating-read"
-          value={rating || 0}
-          precision={0.5}
-          readOnly
-          size="small"
-          style={{ display: "block", marginBottom: 4 }}
-        />
-        <div className="prices">
+        <div className="em-card-prices">
           {oldPrice && price < oldPrice && (
-            <span className="oldPrice">₹{oldPrice.toFixed(2)}</span>
+            <span className="em-card-old">₹{oldPrice.toFixed(2)}</span>
           )}
-          <span className="netPrice">₹{price.toFixed(2)}</span>
+          <span className="em-card-price">₹{price.toFixed(2)}</span>
         </div>
       </div>
     </Link>

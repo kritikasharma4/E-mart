@@ -1,46 +1,36 @@
-import { IoMenu } from "react-icons/io5";
-import { FaAngleDown } from "react-icons/fa";
-import { IoClose } from "react-icons/io5";
-import { Link } from "react-router-dom";
 import { useState } from "react";
+import { Link } from "react-router-dom";
+import { IoMenu, IoClose } from "react-icons/io5";
+import { FaAngleDown } from "react-icons/fa";
 
-const navLinks = [
+const links = [
   { label: "Home", to: "/" },
   { label: "Men",  to: "#", sub: ["Clothing","Footwear","Watches","Accessories"] },
   { label: "Women",to: "#", sub: ["Clothing","Footwear","Handbags","Jewellery"] },
   { label: "Kids", to: "#", sub: ["Boys","Girls","Toys","School Bags"] },
   { label: "Electronics", to: "#", sub: ["Mobiles","Laptops","Tablets","Cameras"] },
-  { label: "Beauty",to: "#", sub: ["Skincare","Makeup","Fragrances","Hair Care"] },
+  { label: "Beauty", to: "#", sub: ["Skincare","Makeup","Fragrances","Hair Care"] },
   { label: "Contact Us", to: "#" },
 ];
 
 const Navigation = () => {
   const [open, setOpen] = useState(false);
-
   return (
     <>
-      <div className="navBar">
-        <div className="container navInner">
-          {/* All categories pill */}
-          <button className="allCatBtn" onClick={() => setOpen(true)}>
-            <IoMenu size={18} />
-            <span>All Categories</span>
-            <FaAngleDown size={12} />
+      <div className="em-nav">
+        <div className="em-nav-inner em-container">
+          <button className="em-cat-btn" onClick={() => setOpen(true)}>
+            <IoMenu /> <span className="em-cat-btn-label">All Categories</span>
           </button>
-
-          {/* Horizontal nav links */}
-          <ul className="navLinks">
-            {navLinks.map((link) => (
-              <li key={link.label} className="navItem">
-                <Link to={link.to} className="navLink">
-                  {link.label}
-                  {link.sub && <FaAngleDown size={10} style={{ marginLeft: 3 }} />}
+          <ul className="em-navlinks">
+            {links.map(l => (
+              <li key={l.label}>
+                <Link to={l.to} className="em-navlink">
+                  {l.label} {l.sub && <FaAngleDown size={10} />}
                 </Link>
-                {link.sub && (
-                  <ul className="navDropdown">
-                    {link.sub.map((s) => (
-                      <li key={s}><Link to="/" className="navDropItem">{s}</Link></li>
-                    ))}
+                {l.sub && (
+                  <ul className="em-dropdown">
+                    {l.sub.map(s => <li key={s}><Link to="/">{s}</Link></li>)}
                   </ul>
                 )}
               </li>
@@ -49,26 +39,19 @@ const Navigation = () => {
         </div>
       </div>
 
-      {/* Overlay */}
-      {open && (
-        <div className="sideOverlay" onClick={() => setOpen(false)} />
-      )}
-
-      {/* Slide-in sidebar */}
-      <div className={`mobileSidebar ${open ? "open" : ""}`}>
-        <div className="sidebarHead">
-          <span>Browse Categories</span>
-          <button onClick={() => setOpen(false)}><IoClose size={22} /></button>
+      {open && <div className="em-overlay" onClick={() => setOpen(false)} />}
+      <div className={`em-sidebar-nav ${open ? "open" : ""}`}>
+        <div className="em-sidebar-head">
+          <h3>Browse Categories</h3>
+          <button className="em-sidebar-close" onClick={() => setOpen(false)}><IoClose /></button>
         </div>
-        <ul className="sidebarLinks">
-          {navLinks.map((link) => (
-            <li key={link.label}>
-              <Link to={link.to} className="sidebarLink" onClick={() => setOpen(false)}>
-                {link.label}
-              </Link>
-            </li>
+        <div className="em-sidebar-links">
+          {links.map(l => (
+            <Link key={l.label} to={l.to} className="em-sidebar-link" onClick={() => setOpen(false)}>
+              {l.label}
+            </Link>
           ))}
-        </ul>
+        </div>
       </div>
     </>
   );

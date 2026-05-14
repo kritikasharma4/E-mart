@@ -1,98 +1,68 @@
 import { Link } from "react-router-dom";
 import { TbTruckDelivery } from "react-icons/tb";
-import { CiDiscount1 } from "react-icons/ci";
-import { MdSupportAgent } from "react-icons/md";
 import { RiSecurePaymentLine } from "react-icons/ri";
-import { FaFacebookSquare, FaInstagramSquare } from "react-icons/fa";
+import { MdSupportAgent } from "react-icons/md";
+import { CiDiscount1 } from "react-icons/ci";
+import { FaFacebookF, FaInstagram } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 
-const Footer = () => {
-  return (
-    <footer>
-      <div className="container">
-        <div className="footer-features">
-          <div className="footer-feature">
-            <TbTruckDelivery />
-            <div className="text">
-              <h6>Free Delivery</h6>
-              <p>On orders over ₹999</p>
-            </div>
-          </div>
-          <div className="footer-feature">
-            <RiSecurePaymentLine />
-            <div className="text">
-              <h6>Secure Payment</h6>
-              <p>100% safe transactions</p>
-            </div>
-          </div>
-          <div className="footer-feature">
-            <CiDiscount1 />
-            <div className="text">
-              <h6>Daily Deals</h6>
-              <p>Mega discounts every day</p>
-            </div>
-          </div>
-          <div className="footer-feature">
-            <MdSupportAgent />
-            <div className="text">
-              <h6>24/7 Support</h6>
-              <p>We're here to help you</p>
-            </div>
-          </div>
-        </div>
+const cols = [
+  { title: "Shop", links: ["Electronics","Fashion","Home & Living","Sports","Beauty","Books"] },
+  { title: "Company", links: ["About Us","Careers","Press","Blog","Partners","Investors"] },
+  { title: "Support", links: ["Help Center","Returns Policy","Track Order","Shipping Info","Privacy Policy","Terms of Service"] },
+];
 
-        <div className="row pb-4">
-          <div className="col-lg-3 col-md-6 mb-4">
-            <h5>Shop</h5>
-            <ul>
-              <li><Link to="#">Electronics</Link></li>
-              <li><Link to="#">Fashion</Link></li>
-              <li><Link to="#">Home & Living</Link></li>
-              <li><Link to="#">Sports</Link></li>
-              <li><Link to="#">Beauty</Link></li>
-            </ul>
-          </div>
-          <div className="col-lg-3 col-md-6 mb-4">
-            <h5>Company</h5>
-            <ul>
-              <li><Link to="#">About Us</Link></li>
-              <li><Link to="#">Careers</Link></li>
-              <li><Link to="#">Blog</Link></li>
-              <li><Link to="#">Press</Link></li>
-              <li><Link to="#">Partners</Link></li>
-            </ul>
-          </div>
-          <div className="col-lg-3 col-md-6 mb-4">
-            <h5>Support</h5>
-            <ul>
-              <li><Link to="#">Help Center</Link></li>
-              <li><Link to="#">Returns</Link></li>
-              <li><Link to="#">Track Order</Link></li>
-              <li><Link to="#">Privacy Policy</Link></li>
-              <li><Link to="#">Terms of Service</Link></li>
-            </ul>
-          </div>
-          <div className="col-lg-3 col-md-6 mb-4">
-            <h5>Contact</h5>
-            <ul>
-              <li><Link to="#">sharmakritika247k@gmail.com</Link></li>
-              <li><Link to="#">+91 98765 43210</Link></li>
-              <li><Link to="#">New Delhi, India</Link></li>
-            </ul>
-          </div>
+const Footer = () => (
+  <footer className="em-footer">
+    {/* Feature strip */}
+    <div className="em-footer-features">
+      {[
+        { Icon: TbTruckDelivery, h: "Free Delivery",    p: "On orders over ₹999" },
+        { Icon: RiSecurePaymentLine, h: "Secure Payment", p: "100% safe transactions" },
+        { Icon: CiDiscount1, h: "Daily Deals",      p: "Mega discounts every day" },
+        { Icon: MdSupportAgent, h: "24/7 Support",    p: "Always here to help" },
+      ].map(({ Icon, h, p }) => (
+        <div className="em-footer-feat" key={h}>
+          <Icon />
+          <div><h6>{h}</h6><p>{p}</p></div>
         </div>
+      ))}
+    </div>
 
-        <div className="footer-bottom">
-          <p>© {new Date().getFullYear()} E-Mart. All rights reserved.</p>
-          <div className="footer-socials">
-            <Link to="#" aria-label="Facebook"><FaFacebookSquare /></Link>
-            <Link to="#" aria-label="Instagram"><FaInstagramSquare /></Link>
-            <Link to="#" aria-label="Twitter"><FaXTwitter /></Link>
+    {/* Links */}
+    <div className="em-footer-body">
+      <div className="em-container" style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr 1fr", gap: 32 }}>
+        <div>
+          <h5 style={{ fontSize: 22, fontWeight: 900, color: "var(--brand)", letterSpacing: -1, marginBottom: 12 }}>
+            e<span style={{ color: "#fff" }}>mart</span>
+          </h5>
+          <p style={{ fontSize: 13, color: "rgba(255,255,255,.5)", lineHeight: 1.7, maxWidth: 220 }}>
+            Your one-stop destination for fashion, electronics, beauty and more — delivered to your door.
+          </p>
+        </div>
+        {cols.map(col => (
+          <div key={col.title}>
+            <h5>{col.title}</h5>
+            <ul className="em-footer-links">
+              {col.links.map(l => <li key={l}><Link to="#">{l}</Link></li>)}
+            </ul>
           </div>
+        ))}
+      </div>
+    </div>
+
+    {/* Bottom bar */}
+    <div className="em-container">
+      <div className="em-footer-bottom">
+        <p>© {new Date().getFullYear()} E-Mart. All rights reserved.</p>
+        <div className="em-footer-socials">
+          <Link to="#" aria-label="Facebook"><FaFacebookF /></Link>
+          <Link to="#" aria-label="Instagram"><FaInstagram /></Link>
+          <Link to="#" aria-label="Twitter"><FaXTwitter /></Link>
         </div>
       </div>
-    </footer>
-  );
-};
+    </div>
+  </footer>
+);
 
 export default Footer;

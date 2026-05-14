@@ -1,104 +1,83 @@
-import Sidebar from "../../components/Sidebar";
-import Button from "@mui/material/Button";
-import { IoMdMenu } from "react-icons/io";
-import { CgMenuGridR } from "react-icons/cg";
-import { TfiLayoutGrid4Alt } from "react-icons/tfi";
-import { VscTriangleDown } from "react-icons/vsc";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import ProductItem from "../../components/ProductItem";
+import { IoGridOutline, IoListOutline } from "react-icons/io5";
+import { BsGrid3X3Gap } from "react-icons/bs";
+import { FaChevronDown } from "react-icons/fa";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 import Pagination from "@mui/material/Pagination";
+import Sidebar from "../../components/Sidebar";
+import ProductItem from "../../components/ProductItem";
 import { fetchDataFromApi } from "../../utils/api";
 
 const Listing = () => {
   const { id } = useParams();
   const [anchorEl, setAnchorEl] = useState(null);
-  const [productView, setProductView] = useState("four");
+  const [view, setView] = useState("em-grid-4");
   const [products, setProducts] = useState([]);
-  const [perPage, setPerPage] = useState(10);
+  const [perPage, setPerPage] = useState(12);
   const [loading, setLoading] = useState(true);
-  const openDropdown = Boolean(anchorEl);
-
-  const handleClick = (event) => setAnchorEl(event.currentTarget);
-  const handleClose = () => setAnchorEl(null);
 
   useEffect(() => {
     setLoading(true);
     const url = id
       ? `/api/products?category=${id}&limit=${perPage}&skip=0`
       : `/api/products?limit=${perPage}&skip=0`;
-    fetchDataFromApi(url).then((res) => {
-      setProducts(res.products || (Array.isArray(res) ? res : []));
+    fetchDataFromApi(url).then(r => {
+      setProducts(r.products || (Array.isArray(r) ? r : []));
       setLoading(false);
     });
   }, [id, perPage]);
 
   return (
-    <section className="product_Listing_Page">
-      <div className="container">
-        <div className="productListing-row">
-          <div className="sidebarWrapper">
-            <Sidebar />
-          </div>
+    <div className="em-listing">
+      <div className="em-container">
+        <div className="em-listing-layout">
+          <Sidebar />
 
-          <div className="content_right">
+          <div className="em-listing-content">
             <img
               src="https://cmsimages.shoppersstop.com/The_Beauty_Spotlight_Hp_web_0448ce73db/The_Beauty_Spotlight_Hp_web_0448ce73db.jpg"
-              className="banner-img"
+              className="em-listing-banner"
               alt="Category banner"
             />
 
-            <div className="listingToolbar">
-              <div className="viewBtns">
-                <Button className={productView === "one" ? "act" : ""} onClick={() => setProductView("one")} title="List view">
-                  <IoMdMenu />
-                </Button>
-                <Button className={productView === "four" ? "act" : ""} onClick={() => setProductView("four")} title="Grid view">
-                  <CgMenuGridR />
-                </Button>
-                <Button className={productView === "three" ? "act" : ""} onClick={() => setProductView("three")} title="3-column view">
-                  <TfiLayoutGrid4Alt />
-                </Button>
+            <div className="em-toolbar">
+              <div className="em-view-btns">
+                <button className={`em-view-btn ${view === "em-grid-4" ? "active" : ""}`} onClick={() => setView("em-grid-4")} title="4 columns"><IoGridOutline /></button>
+                <button className={`em-view-btn ${view === "em-grid-3" ? "active" : ""}`} onClick={() => setView("em-grid-3")} title="3 columns"><BsGrid3X3Gap /></button>
+                <button className={`em-view-btn ${view === "em-grid-list" ? "active" : ""}`} onClick={() => setView("em-grid-list")} title="List"><IoListOutline /></button>
               </div>
-
-              <div className="showByFilter">
-                <Button onClick={handleClick}>
-                  Show {perPage} <VscTriangleDown style={{ marginLeft: 4 }} />
-                </Button>
-                <Menu
-                  anchorEl={anchorEl}
-                  open={openDropdown}
-                  onClose={handleClose}
-                  MenuListProps={{ "aria-labelledby": "show-per-page" }}
-                >
-                  {[10, 20, 30, 40].map(n => (
-                    <MenuItem key={n} onClick={() => { setPerPage(n); handleClose(); }}>{n}</MenuItem>
-                  ))}
-                </Menu>
-              </div>
+              <span style={{ fontSize: 13, color: "var(--muted)" }}>
+                {loading ? "Loading…" : `${products.length} products`}
+              </span>
+              <button className="em-per-page-btn" onClick={e => setAnchorEl(e.currentTarget)}>
+                Show {perPage} <FaChevronDown size={10} />
+              </button>
+              <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)}>
+                {[12, 24, 36, 48].map(n => (
+                  <MenuItem key={n} onClick={() => { setPerPage(n); setAnchorEl(null); }}>{n} per page</MenuItem>
+                ))}
+              </Menu>
             </div>
 
-            <div className={`productListing ${productView}`}>
+            <div className={`em-grid ${view}`}>
               {loading ? (
-                <p style={{ gridColumn: "1/-1", textAlign: "center", padding: "60px 0", color: "var(--muted)" }}>Loading products...</p>
+                <div className="em-loading">Loading products…</div>
               ) : products.length === 0 ? (
-                <p style={{ gridColumn: "1/-1", textAlign: "center", padding: "60px 0", color: "var(--muted)" }}>No products found in this category.</p>
+                <div className="em-empty">No products found in this category.</div>
               ) : (
-                products.map((product) => (
-                  <ProductItem key={product._id} product={product} />
-                ))
+                products.map(p => <ProductItem key={p._id} product={p} />)
               )}
             </div>
 
-            <div className="d-flex align-items-center justify-content-center mt-4">
+            <div style={{ display: "flex", justifyContent: "center", marginTop: 36 }}>
               <Pagination count={10} color="primary" size="large" />
             </div>
           </div>
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 
