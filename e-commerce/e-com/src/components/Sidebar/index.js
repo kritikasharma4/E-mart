@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import RangeSlider from "react-range-slider-input";
@@ -8,7 +7,6 @@ import { Link } from "react-router-dom";
 
 const Sidebar = () => {
   const [value, setValue] = useState([100, 60000]);
-  const [value2, setValue2] = useState(0);
 
   return (
     <>
@@ -120,7 +118,8 @@ const Sidebar = () => {
           <img
             src="https://api.spicezgold.com/download/file_1734525767798_NewProject(35).jpg"
             className="w-100"
-          ></img>
+            alt="Promo banner"
+          />
         </Link>
       </div>
     </>

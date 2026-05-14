@@ -14,6 +14,7 @@ const SignIn = () => {
   useEffect(() => {
     context.setisHeaderFooterShow(false);
     return () => context.setisHeaderFooterShow(true);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -36,40 +37,21 @@ const SignIn = () => {
             <form>
               <h2 className="mb-4">Sign In</h2>
               <div className="form-group">
-                <TextField
-                  id="email-input"
-                  label="Email"
-                  required
-                  variant="standard"
-                  className="w-100"
-                />
+                <TextField id="email-input" label="Email" required variant="standard" className="w-100" />
               </div>
               <div className="form-group">
-                <TextField
-                  id="password-input"
-                  label="Password"
-                  required
-                  type="password"
-                  variant="standard"
-                  className="w-100"
-                />
+                <TextField id="password-input" label="Password" required type="password" variant="standard" className="w-100" />
               </div>
 
+              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
               <a className="border-effect cursor">Forgot Password?</a>
 
               <div className="button-group">
-                <Button
-                  style={{ background: "#2bbef9", color: "#fff" }}
-                  className="action-button"
-                >
+                <Button style={{ background: "#2bbef9", color: "#fff" }} className="action-button">
                   Sign In
                 </Button>
                 <Link to="/">
-                  <Button
-                    variant="outlined"
-                    onClick={() => context.setisHeaderFooterShow(true)}
-                    className="action-button cancel-button"
-                  >
+                  <Button variant="outlined" onClick={() => context.setisHeaderFooterShow(true)} className="action-button cancel-button">
                     Cancel
                   </Button>
                 </Link>
@@ -77,9 +59,7 @@ const SignIn = () => {
 
               <p className="txt">
                 Not Registered?{" "}
-                <Link to="/signUp" className="border-effect">
-                  Sign Up
-                </Link>
+                <Link to="/signUp" className="border-effect">Sign Up</Link>
               </p>
 
               <h6 className="text-center" style={{ fontWeight: "bold" }}>
@@ -87,24 +67,14 @@ const SignIn = () => {
               </h6>
 
               <div className="social-icons">
-                <Link to="#" className="social-icon facebook">
-                  <FaFacebookSquare />
-                </Link>
-                <Link to="#" className="social-icon instagram">
-                  <FaInstagramSquare />
-                </Link>
-                <Link to="#" className="social-icon twitter">
-                  <FaXTwitter />
-                </Link>
+                <Link to="#" className="social-icon facebook"><FaFacebookSquare /></Link>
+                <Link to="#" className="social-icon instagram"><FaInstagramSquare /></Link>
+                <Link to="#" className="social-icon twitter"><FaXTwitter /></Link>
               </div>
 
               <div className="google-signin-btn mt-3">
                 <button className="google-auth-button w-100">
-                  <img
-                    src="https://developers.google.com/identity/images/g-logo.png"
-                    alt="Google"
-                    className="google-icon"
-                  />
+                  <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" className="google-icon" />
                   <span className="google-button-text">Sign in with Google</span>
                 </button>
               </div>

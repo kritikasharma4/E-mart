@@ -73,15 +73,13 @@ const ProductDetails = () => {
                 <ul className="list list-inline mb-0 ps-4">
                   {[50, 100, 200, 300, 400].map((weight, index) => (
                     <li className="list-inline-item" key={index}>
-                      <a
-                        className={`tag ${
-                          activeSize === index ? "active" : ""
-                        }`}
+                      <span
+                        className={`tag ${activeSize === index ? "active" : ""}`}
                         style={{ cursor: "pointer" }}
                         onClick={() => handleSizeSelect(index)}
                       >
                         {weight}g
-                      </a>
+                      </span>
                     </li>
                   ))}
                 </ul>
