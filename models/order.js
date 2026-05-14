@@ -8,6 +8,12 @@ const orderItemSchema = mongoose.Schema({
   qty: { type: Number, required: true },
 });
 
+const statusEventSchema = mongoose.Schema({
+  status: { type: String, required: true },
+  note: { type: String, default: '' },
+  updatedAt: { type: Date, default: Date.now },
+});
+
 const orderSchema = mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   items: [orderItemSchema],
@@ -28,6 +34,7 @@ const orderSchema = mongoose.Schema({
     enum: ['Pending', 'Confirmed', 'Shipped', 'Delivered', 'Cancelled'],
     default: 'Pending',
   },
+  statusHistory: [statusEventSchema],
   isPaid: { type: Boolean, default: false },
   paidAt: { type: Date },
   isDelivered: { type: Boolean, default: false },

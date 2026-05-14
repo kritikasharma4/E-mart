@@ -17,6 +17,7 @@ import ProductList from "./pages/ProductList";
 import CategoryAdd from "./pages/CategoryAdd";
 import CategoryList from "./pages/CategoryList";
 import Orders from "./pages/Orders";
+import OrderDetail from "./pages/OrderDetail";
 
 const MyContext = createContext();
 const theme = createTheme();
@@ -53,6 +54,7 @@ function AppLayout() {
             <Route path="/c-upload" element={<ProtectedRoute><CategoryAdd /></ProtectedRoute>} />
             <Route path="/category-list" element={<ProtectedRoute><CategoryList /></ProtectedRoute>} />
             <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
+            <Route path="/orders/:id" element={<ProtectedRoute><OrderDetail /></ProtectedRoute>} />
           </Routes>
         </div>
       </div>
