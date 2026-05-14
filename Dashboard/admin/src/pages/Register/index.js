@@ -1,83 +1,87 @@
-import React, { useState } from "react";
-
+import { useState, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { MyContext } from "../../App";
+import { postData } from "../../utils/api";
+import { toast } from "react-toastify";
 
 const Register = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const { loginAdmin } = useContext(MyContext);
+  const navigate = useNavigate();
+  const [form, setForm] = useState({ name: "", email: "", password: "", confirm: "" });
+  const [loading, setLoading] = useState(false);
+  const [showPwd, setShowPwd] = useState(false);
+
+  const handleChange = (e) => setForm(f => ({ ...f, [e.target.name]: e.target.value }));
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (form.password !== form.confirm) return toast.error("Passwords do not match");
+    if (form.password.length < 6) return toast.error("Password must be at least 6 characters");
+    setLoading(true);
+    const res = await postData("/api/users/register", {
+      name: form.name,
+      email: form.email,
+      password: form.password,
+    });
+    setLoading(false);
+    if (res?.token) {
+      loginAdmin(res.user, res.token);
+      toast.success("Account created! Redirecting to dashboard…");
+      navigate("/");
+    } else {
+      toast.error(res?.message || "Registration failed");
+    }
+  };
 
   return (
     <div className="registerPage">
-      {/* Left Side */}
       <div className="registerLeft">
         <div className="registerLeftContent">
-          <h1>BEST UX/UI FASHION ECOMMERCE DASHBOARD & ADMIN PANEL</h1>
-          <p>
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-            Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-            when an unknown printer took a galley of type and scrambled it to make a type
-            specimen book. It has survived not only five centuries.
-          </p>
-          <button className="homeBtn" onClick={() => window.location.href = "/"}>
-  Go To Home
-</button>
-
+          <h1>E-Mart Admin Dashboard</h1>
+          <p>Manage products, categories, and orders from your central admin panel.</p>
+          <Link to="/login" className="homeBtn">Back to Login</Link>
         </div>
       </div>
 
-      {/* Right Side */}
       <div className="registerRight">
         <div className="registerBox">
           <div className="registerHeader">
-            <img
-              src="https://cdn-icons-png.flaticon.com/512/295/295128.png"
-              alt="logo"
-              className="registerLogo"
-            />
-            <h2>Register a new account</h2>
+            <img src="https://cdn-icons-png.flaticon.com/512/295/295128.png" alt="logo" className="registerLogo" />
+            <h2>Create Admin Account</h2>
           </div>
 
-          <form className="registerForm">
-            <input type="text" placeholder="enter your name" required />
-            <input type="email" placeholder="enter your email" required />
+          <form className="registerForm" onSubmit={handleSubmit}>
+            <input type="text" name="name" placeholder="Full name" value={form.name} onChange={handleChange} required />
+            <input type="email" name="email" placeholder="Email address" value={form.email} onChange={handleChange} required />
             <div className="inputGroup">
               <input
-                type={showPassword ? "text" : "password"}
-                placeholder="enter your password"
+                type={showPwd ? "text" : "password"}
+                name="password"
+                placeholder="Password (min 6 chars)"
+                value={form.password}
+                onChange={handleChange}
                 required
               />
-              <span onClick={() => setShowPassword(!showPassword)}>
-                {showPassword ? "🙈" : "👁️"}
-              </span>
+              <span onClick={() => setShowPwd(s => !s)}>{showPwd ? "🙈" : "👁️"}</span>
             </div>
             <div className="inputGroup">
               <input
-                type={showConfirmPassword ? "text" : "password"}
-                placeholder="confirm your password"
+                type="password"
+                name="confirm"
+                placeholder="Confirm password"
+                value={form.confirm}
+                onChange={handleChange}
                 required
               />
-              <span onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
-                {showConfirmPassword ? "🙈" : "👁️"}
-              </span>
             </div>
-
-            <div className="terms">
-              <input type="checkbox" id="terms" required />
-              <label htmlFor="terms">I agree to all Terms & Conditions</label>
-            </div>
-
-            <button className="signUpBtn" type="submit">Sign Up</button>
-
-            <div className="divider">or</div>
-
-            <button className="googleBtn" type="button">
-              <img
-                src="https://cdn-icons-png.flaticon.com/512/2702/2702602.png"
-                alt="Google"
-                className="googleIcon"
-              />
-              Sign Up With Google
+            <button className="signUpBtn" type="submit" disabled={loading}>
+              {loading ? "Creating…" : "Create Account"}
             </button>
           </form>
+
+          <p style={{ textAlign: "center", marginTop: 16, fontSize: 14 }}>
+            Already have an account? <Link to="/login">Sign in</Link>
+          </p>
         </div>
       </div>
     </div>

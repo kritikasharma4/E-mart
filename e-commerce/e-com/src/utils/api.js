@@ -1,73 +1,75 @@
-import axios from "axios";
+import axios from 'axios';
 
-const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:4000";
-console.log("BASE_URL:", BASE_URL);
+const BASE_URL = process.env.REACT_APP_BASE_URL || 'http://localhost:4000';
+
+const getAuthHeader = () => {
+  const token = localStorage.getItem('userToken');
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
 
 export const fetchDataFromApi = async (url) => {
   try {
     const { data } = await axios.get(BASE_URL + url);
     return data;
   } catch (error) {
-    console.error("GET Error:", error);
-    return error.response?.data || error.message;
+    return error.response?.data || { error: error.message };
   }
 };
 
-export const postData = async (url, formData, params = {}) => {
+export const postData = async (url, formData) => {
   try {
-    const { data } = await axios.post(BASE_URL + url, formData, { params });
+    const { data } = await axios.post(BASE_URL + url, formData);
     return data;
   } catch (error) {
-    console.error("POST Error:", error);
-    return error.response?.data || error.message;
+    return error.response?.data || { error: error.message };
   }
 };
 
-export const updateCategory = async (id, data) => {
+export const postAuthData = async (url, formData) => {
   try {
-    const res = await axios.put(`${BASE_URL}/api/category/${id}`, data, {
-      headers: { "Content-Type": "application/json" },
+    const { data } = await axios.post(BASE_URL + url, formData, {
+      headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
     });
-    return res.data;
+    return data;
   } catch (error) {
-    console.error("Update failed:", error);
-    throw error;
+    return error.response?.data || { error: error.message };
   }
 };
 
-export const deleteCategory = async (id) => {
+export const getAuthData = async (url) => {
   try {
-    const res = await axios.delete(`${BASE_URL}/api/category/${id}`);
-    return res.data;
-  } catch (error) {
-    console.error("Delete failed:", error);
-    throw error;
-  }
-};
-
-export const getProducts = (filters) =>
-  axios.get(`${BASE_URL}/api/products`, { params: filters });
-
-export const deleteProduct = async (id) => {
-  try {
-    const res = await axios.delete(`${BASE_URL}/api/products/${id}`);
-    return res.data;
-  } catch (error) {
-    console.error("Product delete failed:", error);
-    throw error;
-  }
-};
-
-
-export const updateProduct = async (id, data) => {
-  try {
-    const res = await axios.put(`${BASE_URL}/api/products/${id}`, data, {
-      headers: { "Content-Type": "application/json" },
+    const { data } = await axios.get(BASE_URL + url, {
+      headers: getAuthHeader(),
     });
-    return res.data;
+    return data;
   } catch (error) {
-    console.error("Product update failed:", error);
-    throw error;
+    return error.response?.data || { error: error.message };
   }
 };
 
+export const putAuthData = async (url, formData) => {
+  try {
+    const { data } = await axios.put(BASE_URL + url, formData, {
+      headers: { 'Content-Type': 'application/json', ...getAuthHeader() },
+    });
+    return data;
+  } catch (error) {
+    return error.response?.data || { error: error.message };
+  }
+};
+
+export const deleteData = async (url) => {
+  try {
+    const { data } = await axios.delete(BASE_URL + url, { headers: getAuthHeader() });
+    return data;
+  } catch (error) {
+    return error.response?.data || { error: error.message };
+  }
+};
+
+// legacy helpers used by admin
+export const updateCategory = async (id, data) => putAuthData(`/api/category/${id}`, data);
+export const deleteCategory = async (id) => deleteData(`/api/category/${id}`);
+export const getProducts = (filters) => axios.get(`${BASE_URL}/api/products`, { params: filters });
+export const deleteProduct = async (id) => deleteData(`/api/products/${id}`);
+export const updateProduct = async (id, data) => putAuthData(`/api/products/${id}`, data);

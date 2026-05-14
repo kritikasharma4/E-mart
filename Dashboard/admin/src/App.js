@@ -1,78 +1,95 @@
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import "./App.css";
+import { createContext, useState, useCallback, useContext } from "react";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+
 import Dashboard from "./pages/Dashboard";
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
-import Login from "./pages/Login"; // ✅ Import your Login component
-import "bootstrap/dist/css/bootstrap.min.css";
-import { createContext, useState } from "react";
+import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ProductDetails from "./pages/ProductDetails";
 import ProductUpload from "./pages/ProductUpload";
 import ProductList from "./pages/ProductList";
 import CategoryAdd from "./pages/CategoryAdd";
 import CategoryList from "./pages/CategoryList";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import Orders from "./pages/Orders";
 
 const MyContext = createContext();
+const theme = createTheme();
 
-const theme = createTheme({
-  // Customize your MUI theme here
-});
+function ProtectedRoute({ children }) {
+  const { adminUser } = useContext(MyContext);
+  if (!adminUser) return <Navigate to="/login" replace />;
+  return children;
+}
+
+function AppLayout() {
+  const { isToggleSidebar, adminUser } = useContext(MyContext);
+  const location = useLocation();
+  const hideLayout = ["/login", "/register"].includes(location.pathname);
+
+  return (
+    <>
+      {!hideLayout && <Header />}
+      <div className="main d-flex">
+        {!hideLayout && (
+          <div className={`sidebarWrapper ${isToggleSidebar ? "toggle" : ""}`}>
+            <Sidebar />
+          </div>
+        )}
+        <div className={`content ${isToggleSidebar ? "toggle" : ""}`}>
+          <Routes>
+            <Route path="/login" element={adminUser ? <Navigate to="/" replace /> : <Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+            <Route path="/product" element={<ProtectedRoute><ProductDetails /></ProtectedRoute>} />
+            <Route path="/upload" element={<ProtectedRoute><ProductUpload /></ProtectedRoute>} />
+            <Route path="/product-list" element={<ProtectedRoute><ProductList /></ProtectedRoute>} />
+            <Route path="/c-upload" element={<ProtectedRoute><CategoryAdd /></ProtectedRoute>} />
+            <Route path="/category-list" element={<ProtectedRoute><CategoryList /></ProtectedRoute>} />
+            <Route path="/orders" element={<ProtectedRoute><Orders /></ProtectedRoute>} />
+          </Routes>
+        </div>
+      </div>
+    </>
+  );
+}
 
 function App() {
   const [isToggleSidebar, setIsToggleSidebar] = useState(false);
+  const [adminUser, setAdminUser] = useState(() => {
+    try { return JSON.parse(localStorage.getItem("adminUser")) || null; }
+    catch { return null; }
+  });
 
-  const values = {
-    isToggleSidebar,
-    setIsToggleSidebar
-  };
+  const loginAdmin = useCallback((user, token) => {
+    localStorage.setItem("adminUser", JSON.stringify(user));
+    localStorage.setItem("adminToken", token);
+    setAdminUser(user);
+  }, []);
+
+  const logoutAdmin = useCallback(() => {
+    localStorage.removeItem("adminUser");
+    localStorage.removeItem("adminToken");
+    setAdminUser(null);
+  }, []);
+
+  const values = { isToggleSidebar, setIsToggleSidebar, adminUser, loginAdmin, logoutAdmin };
 
   return (
     <ThemeProvider theme={theme}>
       <BrowserRouter>
-        <AppContent values={values} />
-        <ToastContainer position="top-right" autoClose={3000} />
+        <MyContext.Provider value={values}>
+          <AppLayout />
+          <ToastContainer position="top-right" autoClose={3000} />
+        </MyContext.Provider>
       </BrowserRouter>
     </ThemeProvider>
-  );
-}
-
-// ✅ This wrapper allows us to use `useLocation` hook to conditionally render
-function AppContent({ values }) {
-  const location = useLocation();
-
-  // Hide Header & Sidebar on login page
-  const hideLayout = location.pathname === "/login" || location.pathname === "/register";
-
-
-  return (
-    <MyContext.Provider value={values}>
-      {!hideLayout && <Header />}
-      <div className="main d-flex">
-        {!hideLayout && (
-          <div className={`sidebarWrapper ${values.isToggleSidebar ? "toggle" : ""}`}>
-            <Sidebar />
-          </div>
-        )}
-
-        <div className={`content ${values.isToggleSidebar ? "toggle" : ""}`}>
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/login" element={<Login />} /> 
-            <Route path="/register" element={<Register />} />
-            <Route path="/product" element={<ProductDetails />} />
-            <Route path="/upload" element={<ProductUpload />} />
-            <Route path="/product-list" element={<ProductList />} />
-            <Route path="/c-upload" element={<CategoryAdd />} />
-            <Route path="/category-list" element={<CategoryList />} />
-          </Routes>
-        </div>
-      </div>
-    </MyContext.Provider>
   );
 }
 

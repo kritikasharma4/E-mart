@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   List,
   ListItem,
@@ -11,9 +11,11 @@ import {
   Box,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
+import { MyContext } from "../../App";
 
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import MessageIcon from "@mui/icons-material/Message";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -28,6 +30,7 @@ const Sidebar = () => {
   const [openProducts, setOpenProducts] = useState(false);
   const [openCategory, setOpenCategory] = useState(false);
   const navigate = useNavigate();
+  const { logoutAdmin } = useContext(MyContext);
 
   const handleProductsClick = () => {
     setOpenProducts(!openProducts);
@@ -59,6 +62,11 @@ const Sidebar = () => {
         { text: "Category List", icon: <ListAltIcon />, link: "/category-list" },
         { text: "Category Upload", icon: <CloudUploadIcon />, link: "/c-upload" },
       ],
+    },
+    {
+      text: "Orders",
+      icon: <ReceiptLongIcon />,
+      link: "/orders",
     },
     {
       text: "Messages",
@@ -149,7 +157,7 @@ const Sidebar = () => {
         <Button
           variant="contained"
           fullWidth
-          onClick={() => navigate("/login")}
+          onClick={() => { logoutAdmin(); navigate("/login"); }}
           sx={{
             borderRadius: 2,
             backgroundColor: "#3f51b5",
