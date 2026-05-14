@@ -1,10 +1,8 @@
 import { Link } from "react-router-dom";
 import Logo from "../../Assets/images/e-com.png";
-import Button from "@mui/material/Button";
 import CountryDropdown from "../CountryDropdown";
-import { FaUserAlt } from "react-icons/fa";
-import { FaCartShopping } from "react-icons/fa6";
-import SearchBox from "./SearchBox";
+import { FaCartShopping, FaUser } from "react-icons/fa6";
+import { FaSearch } from "react-icons/fa";
 import Navigation from "./Navigation";
 import { MyContext } from "../../App";
 import { useContext } from "react";
@@ -19,77 +17,57 @@ const Header = () => {
 
   return (
     <div className="headerWrapper">
-      <div className="top-strip bg-purple">
+      {/* Announcement bar */}
+      <div className="top-strip">
         <div className="container">
-          <p className="mb-0 mt-0 text-center">
-            Have a great time <b>shopping</b> on our platform!
+          <p className="mb-0 text-center">
+            Free shipping on orders over <b>₹999</b> — Shop now!
           </p>
         </div>
       </div>
 
+      {/* Main header row */}
       <header className="header">
         <div className="container">
-          <div className="row align-items-center">
-            <div className="logoWrapper col-sm-2 d-flex align-items-center">
-              <Link to="/">
-                <img src={Logo} alt="Logo" />
-              </Link>
+          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+
+            {/* Logo */}
+            <Link to="/" style={{ flexShrink: 0 }}>
+              <img src={Logo} alt="E-Mart" className="logoImg" />
+            </Link>
+
+            {/* Country dropdown (hidden on mobile) */}
+            {countryList?.length > 0 && (
+              <div className="countryDropWrap">
+                <CountryDropdown />
+              </div>
+            )}
+
+            {/* Search box */}
+            <div className="headerSearch" style={{ flex: 1 }}>
+              <input type="text" placeholder="Search for products, brands and more..." />
+              <button className="searchIconBtn" type="button">
+                <FaSearch />
+              </button>
             </div>
 
-            <div className="part2 col-sm-10 d-flex align-items-center">
-              <div
-                className="d-flex align-items-center flex-grow-1 gap-2"
-                style={{ width: "100%" }}
-              >
-                {countryList?.length > 0 && <CountryDropdown />}
+            {/* Right actions */}
+            <div style={{ display: "flex", alignItems: "center", gap: 10, flexShrink: 0 }}>
+              {isLogin ? (
+                <button className="headerIconBtn" title="Account">
+                  <FaUser />
+                </button>
+              ) : (
+                <Link to="/signIn" className="signInBtn">Sign In</Link>
+              )}
 
-                <SearchBox />
-
-                <div className="part3 d-flex align-items-center ml-auto">
-                  {isLogin !== true ? (
-                    <Link to="/signIn">
-                      <Button className="btn-blue btn-lg btn-big btn-round mr-3">
-                        Sign In
-                      </Button>
-                    </Link>
-                  ) : (
-                    <Button
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        minWidth: "50px",
-                        height: "50px",
-                        width: "50px",
-                        borderRadius: "50%",
-                        border: "1px solid rgba(0, 0, 0, 0.1)",
-                        color: "#000",
-                        ml: 2,
-                        backgroundColor: "#fff",
-                        padding: 0,
-                        "& svg": { fontSize: "22px" },
-                      }}
-                    >
-                      <FaUserAlt />
-                    </Button>
-                  )}
-
-                  <div className="ml-auto cartTab">
-                    <span className="price">
-                      ₹{cartTotal.toFixed(2)}
-                    </span>
-                    <Button
-                      className="circle"
-                      onClick={() => navigate("/cart")}
-                    >
-                      <FaCartShopping />
-                    </Button>
-                    <span className="count d-flex align-items-center justify-content-center">
-                      {cartCount}
-                    </span>
-                  </div>
-                </div>
-              </div>
+              <button className="cartBtn" onClick={() => navigate("/cart")}>
+                <span className="cartIcon">
+                  <FaCartShopping />
+                  {cartCount > 0 && <span className="cartBadge">{cartCount}</span>}
+                </span>
+                <span className="cartPrice">₹{cartTotal.toFixed(2)}</span>
+              </button>
             </div>
           </div>
         </div>

@@ -5,69 +5,41 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 
 const navLinks = [
-  { label: "Home", to: "/", sub: [] },
-  {
-    label: "Men", to: "#", sub: [
-      { label: "Clothing", to: "/" },
-      { label: "Footwear", to: "/" },
-      { label: "Watches", to: "/" },
-      { label: "Accessories", to: "/" },
-    ]
-  },
-  {
-    label: "Women", to: "#", sub: [
-      { label: "Clothing", to: "/" },
-      { label: "Footwear", to: "/" },
-      { label: "Watches", to: "/" },
-      { label: "Bags", to: "/" },
-    ]
-  },
-  {
-    label: "Kids", to: "#", sub: [
-      { label: "Boys", to: "/" },
-      { label: "Girls", to: "/" },
-      { label: "Toys", to: "/" },
-    ]
-  },
-  { label: "Electronics", to: "#", sub: [
-      { label: "Mobiles", to: "/" },
-      { label: "Laptops", to: "/" },
-      { label: "Cameras", to: "/" },
-    ]
-  },
-  { label: "Beauty", to: "#", sub: [
-      { label: "Skincare", to: "/" },
-      { label: "Makeup", to: "/" },
-      { label: "Fragrances", to: "/" },
-    ]
-  },
-  { label: "Contact Us", to: "#", sub: [] },
+  { label: "Home", to: "/" },
+  { label: "Men",  to: "#", sub: ["Clothing","Footwear","Watches","Accessories"] },
+  { label: "Women",to: "#", sub: ["Clothing","Footwear","Handbags","Jewellery"] },
+  { label: "Kids", to: "#", sub: ["Boys","Girls","Toys","School Bags"] },
+  { label: "Electronics", to: "#", sub: ["Mobiles","Laptops","Tablets","Cameras"] },
+  { label: "Beauty",to: "#", sub: ["Skincare","Makeup","Fragrances","Hair Care"] },
+  { label: "Contact Us", to: "#" },
 ];
 
 const Navigation = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
   return (
-    <div className="nav">
-      <div className="container">
-        <button className="allCatTab" onClick={() => setSidebarOpen(true)}>
-          <IoMenu />
-          <span className="text">All Categories</span>
-          <FaAngleDown />
-        </button>
+    <>
+      <div className="navBar">
+        <div className="container navInner">
+          {/* All categories pill */}
+          <button className="allCatBtn" onClick={() => setOpen(true)}>
+            <IoMenu size={18} />
+            <span>All Categories</span>
+            <FaAngleDown size={12} />
+          </button>
 
-        <div className="navPart2">
-          <ul>
+          {/* Horizontal nav links */}
+          <ul className="navLinks">
             {navLinks.map((link) => (
-              <li key={link.label}>
-                <Link to={link.to}>
+              <li key={link.label} className="navItem">
+                <Link to={link.to} className="navLink">
                   {link.label}
-                  {link.sub.length > 0 && <FaAngleDown style={{ marginLeft: 4, fontSize: 11 }} />}
+                  {link.sub && <FaAngleDown size={10} style={{ marginLeft: 3 }} />}
                 </Link>
-                {link.sub.length > 0 && (
-                  <ul className="submenu">
+                {link.sub && (
+                  <ul className="navDropdown">
                     {link.sub.map((s) => (
-                      <li key={s.label}><Link to={s.to}>{s.label}</Link></li>
+                      <li key={s}><Link to="/" className="navDropItem">{s}</Link></li>
                     ))}
                   </ul>
                 )}
@@ -77,26 +49,28 @@ const Navigation = () => {
         </div>
       </div>
 
-      {/* Mobile sidebar */}
-      {sidebarOpen && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)", zIndex: 499 }} onClick={() => setSidebarOpen(false)} />
+      {/* Overlay */}
+      {open && (
+        <div className="sideOverlay" onClick={() => setOpen(false)} />
       )}
-      <div className={`sidebarNav ${sidebarOpen ? "open" : ""}`}>
-        <div className="head">
-          <h2>All Categories</h2>
-          <button className="closeBtn" onClick={() => setSidebarOpen(false)}><IoClose /></button>
+
+      {/* Slide-in sidebar */}
+      <div className={`mobileSidebar ${open ? "open" : ""}`}>
+        <div className="sidebarHead">
+          <span>Browse Categories</span>
+          <button onClick={() => setOpen(false)}><IoClose size={22} /></button>
         </div>
-        <ul>
+        <ul className="sidebarLinks">
           {navLinks.map((link) => (
             <li key={link.label}>
-              <Link to={link.to} onClick={() => setSidebarOpen(false)}>
+              <Link to={link.to} className="sidebarLink" onClick={() => setOpen(false)}>
                 {link.label}
               </Link>
             </li>
           ))}
         </ul>
       </div>
-    </div>
+    </>
   );
 };
 
