@@ -8,7 +8,7 @@ A complete e-commerce platform built with React, Node.js, Express, and MongoDB. 
 
 | Service | URL |
 |---------|-----|
-| Customer Store | https://e-luyl1onwz-kritikas-projects-36fc5c41.vercel.app |
+| Customer Store | https://e-com-hazel-one.vercel.app |
 | Admin Dashboard | https://admin-dsv2q08aq-kritikas-projects-36fc5c41.vercel.app |
 | Backend API | https://e-mart-backend-5ake.onrender.com |
 
