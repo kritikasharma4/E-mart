@@ -1,36 +1,28 @@
+import { useEffect, useState } from "react";
 import DashboardBox from "./components/dashboardBox";
 import SalesBox from "./components/SalesBox";
 import { Link } from "react-router-dom";
+import { getProducts } from "../../utils/api";
+import Button from "@mui/material/Button";
+
 const Dashboard = () => {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    getProducts({ limit: 12 }).then((res) => {
+      setProducts(res.data?.products || []);
+    });
+  }, []);
+
   return (
     <div className="content w-100 p-4">
       <div className="row dashboardBoxWrapperRow">
         <div className="col-md-8">
           <div className="dashboardBoxWrapper d-flex flex-wrap justify-content-between">
-            <DashboardBox
-              gradientClass="greenGradient"
-              icon="👤"
-              label="Total Users"
-              value="277"
-            />
-            <DashboardBox
-              gradientClass="pinkGradient"
-              icon="🛒"
-              label="Total Users"
-              value="277"
-            />
-            <DashboardBox
-              gradientClass="blueGradient"
-              icon="🎁"
-              label="Total Users"
-              value="277"
-            />
-            <DashboardBox
-              gradientClass="orangeGradient"
-              icon="⭐"
-              label="Total Users"
-              value="277"
-            />
+            <DashboardBox gradientClass="greenGradient" icon="👤" label="Total Users" value="277" />
+            <DashboardBox gradientClass="pinkGradient" icon="🛒" label="Total Orders" value="134" />
+            <DashboardBox gradientClass="blueGradient" icon="🎁" label="Total Gifts" value="89" />
+            <DashboardBox gradientClass="orangeGradient" icon="⭐" label="Avg Rating" value="4.5" />
           </div>
         </div>
         <div className="col-md-4">
@@ -53,17 +45,13 @@ const Dashboard = () => {
           <div className="col-md-3">
             <h4>CATEGORY BY</h4>
             <select className="form-select">
-              <option>Mens</option>
-              <option>Womens</option>
-              <option>Kids</option>
+              <option>All</option>
             </select>
           </div>
           <div className="col-md-3">
             <h4>BRAND BY</h4>
             <select className="form-select">
-              <option>Ecstasy</option>
-              <option>Zara</option>
-              <option>H&M</option>
+              <option>All</option>
             </select>
           </div>
           <div className="col-md-3">
@@ -71,7 +59,7 @@ const Dashboard = () => {
             <input
               type="text"
               className="form-control"
-              placeholder="id / name / category / brand"
+              placeholder="name / brand"
             />
           </div>
         </div>
@@ -80,71 +68,81 @@ const Dashboard = () => {
           <table className="table bestSellingTable">
             <thead>
               <tr>
-                <th>UID</th>
+                <th>#</th>
                 <th>PRODUCT</th>
                 <th>CATEGORY</th>
                 <th>BRAND</th>
                 <th>PRICE</th>
                 <th>STOCK</th>
                 <th>RATING</th>
-                <th>ORDER</th>
-                <th>SALES</th>
                 <th>ACTION</th>
               </tr>
             </thead>
             <tbody>
-              {[...Array(8)].map((_, i) => (
-                <tr key={i}>
-                  <td>#1</td>
-                  <td>
-                    <div className="productInfo">
-                      <img
-                        src="https://via.placeholder.com/50x50.png?text=Img"
-                        alt="product"
-                      />
-
-                      <div>
-                        <div className="title">
-                          Tops and skirt set for Fe...
-                        </div>
-                        <div className="subtitle">
-                          Women's exclusive summer...
-                        </div>
-                      </div>
-                    </div>
-                  </td>
-                  <td>womans</td>
-                  <td>richman</td>
-                  <td>
-                    <span className="text-muted text-decoration-line-through">
-                      $21.00
-                    </span>
-                    <br />
-                    <span className="text-danger">$21.00</span>
-                  </td>
-                  <td>30</td>
-                  <td>4.9(16)</td>
-                  <td>380</td>
-                  <td>$38k</td>
-                  <td>
-                    <Link to={`/product`} className="btn btn-sm btn-light me-1">
-                      👁
-                    </Link>
-                    <button className="btn btn-sm btn-success me-1">✏️</button>
-                    <button className="btn btn-sm btn-danger">🗑</button>
+              {products.length === 0 ? (
+                <tr>
+                  <td colSpan={8} className="text-center py-4 text-muted">
+                    Loading products...
                   </td>
                 </tr>
-              ))}
+              ) : (
+                products.map((p, i) => (
+                  <tr key={p._id}>
+                    <td>#{i + 1}</td>
+                    <td>
+                      <div className="productInfo d-flex align-items-center gap-2">
+                        <img
+                          src={p.images?.[0] || "https://via.placeholder.com/40"}
+                          alt={p.name}
+                          width={40}
+                          height={40}
+                          style={{ borderRadius: 6, objectFit: "cover", flexShrink: 0 }}
+                        />
+                        <span style={{ fontSize: 13, fontWeight: 500 }}>
+                          {p.name?.length > 30 ? p.name.slice(0, 30) + "..." : p.name}
+                        </span>
+                      </div>
+                    </td>
+                    <td>{p.category?.name || "—"}</td>
+                    <td>{p.brand || "—"}</td>
+                    <td>
+                      {p.oldPrice && p.oldPrice > p.price && (
+                        <span className="text-muted text-decoration-line-through d-block" style={{ fontSize: 12 }}>
+                          ₹{p.oldPrice}
+                        </span>
+                      )}
+                      <span className="text-danger fw-bold">₹{p.price}</span>
+                    </td>
+                    <td>
+                      <span className={p.countInStock > 0 ? "text-success" : "text-danger"}>
+                        {p.countInStock}
+                      </span>
+                    </td>
+                    <td>{p.rating || "—"}</td>
+                    <td>
+                      <div className="d-flex gap-1">
+                        <Link to="/product">
+                          <Button size="small" variant="outlined" style={{ minWidth: 32, padding: "2px 8px", fontSize: 12 }}>
+                            View
+                          </Button>
+                        </Link>
+                        <Link to="/product-list">
+                          <Button size="small" variant="outlined" color="error" style={{ minWidth: 32, padding: "2px 8px", fontSize: 12 }}>
+                            Edit
+                          </Button>
+                        </Link>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
 
-        {/* Pagination (static for now) */}
         <div className="pagination d-flex justify-content-end mt-3">
-          <button className="btn btn-outline-secondary btn-sm me-1">
-            {"<"}
-          </button>
-          {[...Array(10)].map((_, i) => (
+          <button className="btn btn-outline-secondary btn-sm me-1">{"<"}</button>
+          {[...Array(5)].map((_, i) => (
             <button key={i} className="btn btn-outline-secondary btn-sm me-1">
               {i + 1}
             </button>

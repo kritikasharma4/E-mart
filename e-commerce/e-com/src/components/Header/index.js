@@ -10,11 +10,12 @@ import { MyContext } from "../../App";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
-
 const Header = () => {
-  const { countryList } = useContext(MyContext); // ✅ Better destructuring
+  const { countryList, isLogin, cartItems } = useContext(MyContext);
   const navigate = useNavigate();
 
+  const cartCount = cartItems?.reduce((sum, i) => sum + i.qty, 0) || 0;
+  const cartTotal = cartItems?.reduce((sum, i) => sum + i.price * i.qty, 0) || 0;
 
   return (
     <div className="headerWrapper">
@@ -40,43 +41,43 @@ const Header = () => {
                 className="d-flex align-items-center flex-grow-1 gap-2"
                 style={{ width: "100%" }}
               >
-                {/* ✅ Render dropdown only when countries are available */}
-                <CountryDropdown />
-
                 {countryList?.length > 0 && <CountryDropdown />}
 
                 <SearchBox />
 
                 <div className="part3 d-flex align-items-center ml-auto">
-                  {
-                    MyContext.isLogin!==true? 
-                    <Link to="/SignIn">
-                    <Button className="btn-blue btn-lg btn-big btn-round mr-3">SignIn</Button></Link> :
+                  {isLogin !== true ? (
+                    <Link to="/signIn">
+                      <Button className="btn-blue btn-lg btn-big btn-round mr-3">
+                        Sign In
+                      </Button>
+                    </Link>
+                  ) : (
                     <Button
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      minWidth: "50px",
-                      height: "50px",
-                      width: "50px",
-                      borderRadius: "50%",
-                      border: "1px solid rgba(0, 0, 0, 0.1)",
-                      color: "#000",
-                      ml: 8,
-                      backgroundColor: "#fff",
-                      padding: 0,
-                      "& svg": {
-                        fontSize: "22px",
-                      },
-                    }}
-                  >
-                    <FaUserAlt />
-                  </Button>
-                  }
-                  
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        minWidth: "50px",
+                        height: "50px",
+                        width: "50px",
+                        borderRadius: "50%",
+                        border: "1px solid rgba(0, 0, 0, 0.1)",
+                        color: "#000",
+                        ml: 2,
+                        backgroundColor: "#fff",
+                        padding: 0,
+                        "& svg": { fontSize: "22px" },
+                      }}
+                    >
+                      <FaUserAlt />
+                    </Button>
+                  )}
+
                   <div className="ml-auto cartTab">
-                    <span className="price">$3.29</span>
+                    <span className="price">
+                      ₹{cartTotal.toFixed(2)}
+                    </span>
                     <Button
                       className="circle"
                       onClick={() => navigate("/cart")}
@@ -84,7 +85,7 @@ const Header = () => {
                       <FaCartShopping />
                     </Button>
                     <span className="count d-flex align-items-center justify-content-center">
-                      1
+                      {cartCount}
                     </span>
                   </div>
                 </div>

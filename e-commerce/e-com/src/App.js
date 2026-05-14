@@ -18,25 +18,42 @@ const MyContext = createContext();
 function App() {
   const [countryList, setCountryList] = useState([]);
   const [isOpenProductModal, setIsOpenProductModal] = useState(false);
-  const [isHeaderFooterShow, setisHeaderFooterShow]= useState(true);
-  const [isLogin,setIsLogin]=useState(false);
-
+  const [isHeaderFooterShow, setisHeaderFooterShow] = useState(true);
+  const [isLogin, setIsLogin] = useState(false);
+  const [modalProduct, setModalProduct] = useState(null);
+  const [cartItems, setCartItems] = useState([]);
 
   useEffect(() => {
-  getCountry("https://restcountries.com/v3.1/all");
-}, []);
+    getCountry("https://restcountries.com/v3.1/all");
+  }, []);
 
-const getCountry = async (url) => {
-  try {
-    const res = await axios.get(url);
-    console.log("API Response:", res); // ✅ add this
-    console.log("Country List:", res.data.data); // ✅ check this
-    setCountryList(res.data.data);
-  } catch (error) {
-    console.error("Error fetching countries:", error);
-  }
-};
+  const getCountry = async (url) => {
+    try {
+      const res = await axios.get(url);
+      setCountryList(res.data);
+    } catch (error) {
+      console.error("Error fetching countries:", error);
+    }
+  };
 
+  const addToCart = (product) => {
+    setCartItems(prev => {
+      const existing = prev.find(i => i._id === product._id);
+      if (existing) {
+        return prev.map(i => i._id === product._id ? { ...i, qty: i.qty + 1 } : i);
+      }
+      return [...prev, { ...product, qty: 1 }];
+    });
+  };
+
+  const removeFromCart = (id) => {
+    setCartItems(prev => prev.filter(i => i._id !== id));
+  };
+
+  const updateQty = (id, qty) => {
+    if (qty < 1) return;
+    setCartItems(prev => prev.map(i => i._id === id ? { ...i, qty } : i));
+  };
 
   const values = {
     countryList,
@@ -46,6 +63,12 @@ const getCountry = async (url) => {
     setisHeaderFooterShow,
     isLogin,
     setIsLogin,
+    modalProduct,
+    setModalProduct,
+    cartItems,
+    addToCart,
+    removeFromCart,
+    updateQty,
   };
 
   return (

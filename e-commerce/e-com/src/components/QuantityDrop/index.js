@@ -1,29 +1,15 @@
 import { LuPlus } from "react-icons/lu";
 import { HiMinus } from "react-icons/hi";
 import { Button } from "@mui/material";
-import { useState } from "react";
-const QuantityDrop = () => {
 
-
-  const [inputVal,setInputVal]=useState(1);
-
-  const minus=()=>{
-    if(inputVal>1){
-      setInputVal(inputVal-1);
-    }
-    
-  }
-
-  const plus=()=>{
-    setInputVal(inputVal+1);
-  }
+const QuantityDrop = ({ qty = 1, onChange }) => {
   return (
     <div className="quantityDrop d-flex align-items-center">
-      <Button onClick={minus}>
+      <Button onClick={() => onChange?.(qty - 1)}>
         <HiMinus />
       </Button>
-      <input type="text" value={inputVal}/>
-      <Button onClick={plus}>
+      <span className="qty">{qty}</span>
+      <Button onClick={() => onChange?.(qty + 1)}>
         <LuPlus />
       </Button>
     </div>

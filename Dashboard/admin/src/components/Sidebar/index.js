@@ -10,7 +10,7 @@ import {
   Button,
   Box,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
@@ -30,6 +30,7 @@ const Sidebar = () => {
   const [openProducts, setOpenProducts] = useState(false);
   const [openCategory, setOpenCategory] = useState(false);
   const context = useContext(MyContext);
+  const navigate = useNavigate();
 
   const handleProductsClick = () => {
     setOpenProducts(!openProducts);
@@ -151,14 +152,13 @@ const Sidebar = () => {
         <Button
           variant="contained"
           fullWidth
+          onClick={() => navigate("/login")}
           sx={{
             borderRadius: 2,
             backgroundColor: "#3f51b5",
             color: "white",
             textTransform: "none",
-            "&:hover": {
-              backgroundColor: "#303f9f",
-            },
+            "&:hover": { backgroundColor: "#303f9f" },
           }}
         >
           Logout

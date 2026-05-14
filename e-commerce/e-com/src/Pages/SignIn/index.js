@@ -13,16 +13,17 @@ const SignIn = () => {
 
   useEffect(() => {
     context.setisHeaderFooterShow(false);
+    return () => context.setisHeaderFooterShow(true);
   }, []);
+
   return (
     <section className="section signInPage">
-      <div class="shape-bottom">
-        {" "}
+      <div className="shape-bottom">
         <svg fill="#fff" id="Layer_1" x="0px" y="0px" viewBox="0 0 1921 819.8">
           <path
-            class="st0"
+            className="st0"
             d="M1921,413.1v406.7H0V0.5h0.4l228.1,598.3c30,74.4,80.8,130.6,152.5,168.6c107.6,57,212.1,40.7,245.7,34.4 c22.4-4.2,54.9-13.1,97.5-26.6L1921,400.5V413.1z"
-          ></path>{" "}
+          ></path>
         </svg>
       </div>
       <div className="container">
@@ -36,7 +37,7 @@ const SignIn = () => {
               <h2 className="mb-4">Sign In</h2>
               <div className="form-group">
                 <TextField
-                  id="standard-basic"
+                  id="email-input"
                   label="Email"
                   required
                   variant="standard"
@@ -45,7 +46,7 @@ const SignIn = () => {
               </div>
               <div className="form-group">
                 <TextField
-                  id="standard-basic"
+                  id="password-input"
                   label="Password"
                   required
                   type="password"
@@ -54,7 +55,7 @@ const SignIn = () => {
                 />
               </div>
 
-              <a className="border-effect cursor txt">Forgot Password?</a>
+              <a className="border-effect cursor">Forgot Password?</a>
 
               <div className="button-group">
                 <Button
@@ -64,20 +65,20 @@ const SignIn = () => {
                   Sign In
                 </Button>
                 <Link to="/">
-                <Button
-                  variant="outlined"
-                  onClick={()=>context.setisHeaderFooterShow(true)}
-                  className="action-button cancel-button"
-                >
-                  Cancel
-                </Button>
+                  <Button
+                    variant="outlined"
+                    onClick={() => context.setisHeaderFooterShow(true)}
+                    className="action-button cancel-button"
+                  >
+                    Cancel
+                  </Button>
                 </Link>
               </div>
 
               <p className="txt">
                 Not Registered?{" "}
-                <Link to="" className="border-effect">
-                  SignUp
+                <Link to="/signUp" className="border-effect">
+                  Sign Up
                 </Link>
               </p>
 
@@ -97,18 +98,14 @@ const SignIn = () => {
                 </Link>
               </div>
 
-              <div className="google-signin-btn">
+              <div className="google-signin-btn mt-3">
                 <button className="google-auth-button w-100">
-                  <div className="google-icon-wrapper">
-                    <img
-                      src="https://developers.google.com/identity/images/g-logo.png"
-                      alt="Google"
-                      className="google-icon"
-                    />
-                  </div>
-                  <span className="google-button-text">
-                    Sign in with Google
-                  </span>
+                  <img
+                    src="https://developers.google.com/identity/images/g-logo.png"
+                    alt="Google"
+                    className="google-icon"
+                  />
+                  <span className="google-button-text">Sign in with Google</span>
                 </button>
               </div>
             </form>
@@ -118,4 +115,5 @@ const SignIn = () => {
     </section>
   );
 };
+
 export default SignIn;
