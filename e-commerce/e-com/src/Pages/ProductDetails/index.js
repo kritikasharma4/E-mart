@@ -1,130 +1,163 @@
+import { useState, useEffect, useContext } from "react";
+import { useParams, Link } from "react-router-dom";
+import { fetchDataFromApi } from "../../utils/api";
 import ProductZoom from "../../components/ProductZoom";
-import Rating from "@mui/material/Rating";
 import QuantityDrop from "../../components/QuantityDrop";
-import Button from "@mui/material/Button";
-import { IoCart } from "react-icons/io5";
-import { useState } from "react";
-import { FaRegHeart } from "react-icons/fa";
-import { IoGitCompareOutline } from "react-icons/io5";
-import Tooltip from "@mui/material/Tooltip";
-import ProductTabs from "../../components/ProductTabs";
-import RelatedProducts from "./RelatedProducts";
+import { MyContext } from "../../App";
+import { IoCart, IoArrowBack } from "react-icons/io5";
+import { FaStar, FaStarHalf, FaRegStar } from "react-icons/fa";
+
+const Stars = ({ value = 0 }) => {
+  const stars = [];
+  for (let i = 1; i <= 5; i++) {
+    if (value >= i) stars.push(<FaStar key={i} />);
+    else if (value >= i - 0.5) stars.push(<FaStarHalf key={i} />);
+    else stars.push(<FaRegStar key={i} />);
+  }
+  return <span className="em-stars">{stars}</span>;
+};
 
 const ProductDetails = () => {
-  const [activeSize, setActiveSize] = useState(0);
+  const { id } = useParams();
+  const { addToCart } = useContext(MyContext);
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [qty, setQty] = useState(1);
+  const [added, setAdded] = useState(false);
+  const [related, setRelated] = useState([]);
 
-  const handleSizeSelect = (index) => {
-    setActiveSize(index);
+  useEffect(() => {
+    setLoading(true);
+    setAdded(false);
+    setQty(1);
+    fetchDataFromApi(`/api/products/${id}`).then((data) => {
+      setProduct(data);
+      setLoading(false);
+      if (data?.category?._id) {
+        fetchDataFromApi(`/api/products?category=${data.category._id}&limit=6`).then((r) => {
+          setRelated((r?.products || []).filter((p) => p._id !== id));
+        });
+      }
+    });
+    window.scrollTo(0, 0);
+  }, [id]);
+
+  const handleAddToCart = () => {
+    for (let i = 0; i < qty; i++) addToCart(product);
+    setAdded(true);
+    setTimeout(() => setAdded(false), 2000);
   };
 
+  const discount = product?.oldPrice > product?.price
+    ? Math.round(((product.oldPrice - product.price) / product.oldPrice) * 100)
+    : 0;
+
+  if (loading) {
+    return (
+      <div className="em-pd-loading">
+        <div className="em-spinner" />
+        <p>Loading product…</p>
+      </div>
+    );
+  }
+
+  if (!product || product.success === false) {
+    return (
+      <div className="em-pd-error">
+        <p>Product not found.</p>
+        <Link to="/" className="em-back-link"><IoArrowBack /> Back to Home</Link>
+      </div>
+    );
+  }
+
   return (
-    <section className="productDetails section">
-      <div className="container">
-        <div className="row">
-          <div className="col-md-4 mt-5">
-            <ProductZoom />
+    <section className="em-pd">
+      <div className="em-container">
+        <nav className="em-pd-breadcrumb">
+          <Link to="/">Home</Link>
+          {product.category?.name && (
+            <><span>/</span><Link to={`/cat/${product.category._id}`}>{product.category.name}</Link></>
+          )}
+          <span>/</span><span>{product.name}</span>
+        </nav>
+
+        <div className="em-pd-layout">
+          <div className="em-pd-gallery">
+            <ProductZoom images={product.images} discount={discount} />
           </div>
 
-          <div className="col-md-7 mt-5" style={{ marginLeft: "30px" }}>
-            <div className="container">
-              <h2 className="hd text-capitalize">
-                All Natural Italian Style Chicken Meatballs
-              </h2>
+          <div className="em-pd-info">
+            {product.brand && <span className="em-pd-brand">{product.brand}</span>}
+            <h1 className="em-pd-title">{product.name}</h1>
 
-              <ul className="list list-inline d-flex align-items-center">
-                <li className="list-inline-item">
-                  <div className="d-flex align-items-center">
-                    <span className="text-light">Brands: </span>
-                    <span style={{ marginLeft: "5px" }}>Welch's</span>
-                  </div>
-                </li>
-                <li className="list-inline-item">
-                  <div className="d-flex align-items-center">
-                    <Rating
-                      name="read-only"
-                      value={3.5}
-                      precision={0.5}
-                      readOnly
-                      size="small"
-                    />
-                    <span className="text-light cursor ml-2">1 Review</span>
-                  </div>
-                </li>
-              </ul>
+            <div className="em-pd-meta">
+              <Stars value={product.rating} />
+              <span className="em-pd-rating-val">{product.rating?.toFixed(1)}</span>
+              <span className="em-pd-stock">
+                {product.countInStock > 0 ? (
+                  <span className="em-in-stock">In Stock ({product.countInStock})</span>
+                ) : (
+                  <span className="em-out-stock">Out of Stock</span>
+                )}
+              </span>
+            </div>
 
-              <div className="d-flex info mb-3">
-                <span className="oldPrice">$20.00</span>
-                <span className="netPrice text-danger ms-3">$14.00</span>
-              </div>
+            <div className="em-pd-prices">
+              <span className="em-pd-price">₹{product.price?.toLocaleString()}</span>
+              {product.oldPrice > product.price && (
+                <>
+                  <span className="em-pd-old">₹{product.oldPrice?.toLocaleString()}</span>
+                  <span className="em-pd-discount">{discount}% off</span>
+                </>
+              )}
+            </div>
 
-              <span className="badge badge-success">IN STOCKS</span>
+            {product.description && (
+              <p className="em-pd-desc">{product.description}</p>
+            )}
 
-              <p className="mt-3">
-                Lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
-                lorem ipsum lorem ipsum lorem ipsum lorem ipsum orem ipsum lorem
-                ipsum lorem ipsum lorem ipsum lorem ipsum lorem lorem ipsum orem
-                ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem
-                lorem ipsum orem ipsum lorem ipsum lorem ipsum lorem ipsum lorem
-                ipsum lorem.
-              </p>
+            <div className="em-pd-actions">
+              <QuantityDrop
+                value={qty}
+                onChange={setQty}
+                max={product.countInStock}
+              />
+              <button
+                className={`em-pd-cart-btn ${added ? "em-pd-cart-added" : ""}`}
+                onClick={handleAddToCart}
+                disabled={product.countInStock === 0}
+              >
+                <IoCart />
+                {added ? "Added!" : "Add to Cart"}
+              </button>
+            </div>
 
-              <div className="productSize d-flex align-items-center mt-3">
-                <span>Size / Weight:</span>
-                <ul className="list list-inline mb-0 ps-4">
-                  {[50, 100, 200, 300, 400].map((weight, index) => (
-                    <li className="list-inline-item" key={index}>
-                      <span
-                        className={`tag ${activeSize === index ? "active" : ""}`}
-                        style={{ cursor: "pointer" }}
-                        onClick={() => handleSizeSelect(index)}
-                      >
-                        {weight}g
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className="d-flex align-items-center mt-4">
-                <QuantityDrop />
-                <Button
-                  className="btn-lg btn-big btn-round ms-3"
-                  style={{ background: "#2bbef9", color: "#fff" }}
-                >
-                  <IoCart /> &nbsp; Add to Cart
-                </Button>
-
-                <Tooltip title="Add to Wishlist" placement="top">
-                  <Button className="btn-lg btn-big btn-circle ms-3">
-                    <FaRegHeart />
-                  </Button>
-                </Tooltip>
-
-                <Tooltip title="Add to compare" placement="top">
-                  <Button className="btn-lg btn-big btn-circle ms-3">
-                    <IoGitCompareOutline />
-                  </Button>
-                </Tooltip>
-              </div>
+            <div className="em-pd-tags">
+              {product.category?.name && (
+                <span className="em-pd-tag">
+                  Category: <Link to={`/cat/${product.category._id}`}>{product.category.name}</Link>
+                </span>
+              )}
             </div>
           </div>
         </div>
 
-        <br />
-
-        <div style={{ marginTop: "40px", marginLeft: "0px" }}>
-        <ProductTabs />
-        </div>
-
-        <br />
-
-        <div style={{ marginTop: "40px", marginLeft: "30px" }}>
-          <RelatedProducts title="RELATED PRODUCTS" />
-        </div>
-
-        <div style={{ marginTop: "40px", marginLeft: "30px" }}>
-          <RelatedProducts title="RECENTLY VIEWED PRODUCTS" />
-        </div>
+        {related.length > 0 && (
+          <div className="em-pd-related">
+            <h3 className="em-section-title">Related Products</h3>
+            <div className="em-pd-related-grid">
+              {related.slice(0, 4).map((p) => (
+                <Link key={p._id} to={`/product/${p._id}`} className="em-pd-rel-card">
+                  <img src={p.images?.[0]} alt={p.name} />
+                  <div className="em-pd-rel-info">
+                    <p>{p.name}</p>
+                    <span>₹{p.price?.toLocaleString()}</span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );

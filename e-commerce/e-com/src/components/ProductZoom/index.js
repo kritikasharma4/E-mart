@@ -3,70 +3,42 @@ import Slider from "react-slick";
 import "react-inner-image-zoom/lib/styles.min.css";
 import { useRef } from "react";
 
-const ProductZoom = () => {
+const FALLBACK = "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&q=80";
+
+const ProductZoom = ({ images = [], discount = 0 }) => {
   const zoomSliderBig = useRef();
   const zoomSlider = useRef();
 
-  const settings2 = {
-    dots: false,
-    infinite: false,
-    speed: 700,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    fade: false,
-    arrows: false,
-  };
-
-  const settings = {
-    dots: false,
-    infinite: false,
-    speed: 500,
-    slidesToShow: 5,
-    slidesToScroll: 1,
-    fade: false,
-    arrows: true,
-  };
+  const imgs = images.length ? images : [FALLBACK];
 
   const goto = (index) => {
-    zoomSlider.current.slickGoTo(index);
-    zoomSliderBig.current.slickGoTo(index);
+    zoomSlider.current?.slickGoTo(index);
+    zoomSliderBig.current?.slickGoTo(index);
   };
 
-  const images = [
-    "https://api.spicezgold.com/download/file_1734527033961_ksc-khatushyam-collection-black-pu-for-women-handheld-bag-product-images-rvkg3apiuk-0-202405282358.webp",
-    "https://api.spicezgold.com/download/file_1734527033962_ksc-khatushyam-collection-black-pu-for-women-handheld-bag-product-images-rvkg3apiuk-1-202405282358.jpg",
-    "https://api.spicezgold.com/download/file_1734527033961_ksc-khatushyam-collection-black-pu-for-women-handheld-bag-product-images-rvkg3apiuk-0-202405282358.webp",
-  ];
-
   return (
-    <div className="ProductZoom">
-      <div className="productZoom position-relative">
-        <span
-          className="badge"
-          style={{
-            position: "absolute", top: "10px", left: "10px",
-            backgroundColor: "#ff4d4f", color: "#fff",
-            padding: "7px 10px", fontWeight: "bold", zIndex: 10,
-          }}
-        >
-          23% Off
-        </span>
-        <Slider {...settings2} className="zoomSliderBig" ref={zoomSliderBig}>
-          {images.map((src, i) => (
-            <div className="item" key={i}>
-              <InnerImageZoom zoomType="hover" zoomScale={1} src={src} />
+    <div className="em-product-zoom">
+      <div className="em-pz-main">
+        {discount > 0 && (
+          <span className="em-pz-badge">{discount}% Off</span>
+        )}
+        <Slider dots={false} infinite={false} speed={700} slidesToShow={1} slidesToScroll={1} arrows={false} ref={zoomSliderBig}>
+          {imgs.map((src, i) => (
+            <div key={i}>
+              <InnerImageZoom zoomType="hover" zoomScale={1.5} src={src} />
             </div>
           ))}
         </Slider>
       </div>
-
-      <Slider {...settings} className="zoomSlider" ref={zoomSlider}>
-        {images.map((src, i) => (
-          <div className="item" key={i}>
-            <img src={src} className="w-100" alt={`Product view ${i + 1}`} onClick={() => goto(i)} />
-          </div>
-        ))}
-      </Slider>
+      {imgs.length > 1 && (
+        <Slider dots={false} infinite={false} speed={400} slidesToShow={Math.min(5, imgs.length)} slidesToScroll={1} arrows ref={zoomSlider} className="em-pz-thumbs">
+          {imgs.map((src, i) => (
+            <div key={i} className="em-pz-thumb" onClick={() => goto(i)}>
+              <img src={src} alt="" />
+            </div>
+          ))}
+        </Slider>
+      )}
     </div>
   );
 };

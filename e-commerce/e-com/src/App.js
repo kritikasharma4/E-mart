@@ -1,5 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import './App.css';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Home from "./Pages/Home";
 import Header from "./components/Header";
 import { createContext, useState, useEffect } from "react";
@@ -11,6 +13,7 @@ import ProductDetails from "./Pages/ProductDetails";
 import Cart from "./Pages/Cart";
 import SignIn from "./Pages/SignIn";
 import SignUp from "./Pages/SignUp";
+import Search from "./Pages/Search";
 
 const MyContext = createContext();
 
@@ -39,13 +42,17 @@ function App() {
     setCartItems(prev => {
       const existing = prev.find(i => i._id === product._id);
       if (existing) {
+        toast.success(`${product.name} quantity updated`, { autoClose: 1800 });
         return prev.map(i => i._id === product._id ? { ...i, qty: i.qty + 1 } : i);
       }
+      toast.success(`${product.name} added to cart`, { autoClose: 1800 });
       return [...prev, { ...product, qty: 1 }];
     });
   };
 
   const removeFromCart = (id) => {
+    const item = cartItems.find(i => i._id === id);
+    if (item) toast.info(`${item.name} removed from cart`, { autoClose: 1500 });
     setCartItems(prev => prev.filter(i => i._id !== id));
   };
 
@@ -73,22 +80,28 @@ function App() {
   return (
     <BrowserRouter>
       <MyContext.Provider value={values}>
-        {
-          isHeaderFooterShow===true && <Header />
-        }
-        
+        {isHeaderFooterShow === true && <Header />}
+
         <Routes>
           <Route path="/" exact={true} element={<Home />} />
           <Route path="/cat/:id" exact={true} element={<Listing />} />
-          <Route path="/product/:id" exact={true} element={<ProductDetails/>} />
-          <Route path="/cart" exact={true} element={<Cart/>} />
-          <Route path="/signIn" exact={true} element={<SignIn/>} />
-          <Route path="/signUp" exact={true} element={<SignUp/>} />
+          <Route path="/product/:id" exact={true} element={<ProductDetails />} />
+          <Route path="/cart" exact={true} element={<Cart />} />
+          <Route path="/signIn" exact={true} element={<SignIn />} />
+          <Route path="/signUp" exact={true} element={<SignUp />} />
+          <Route path="/search" exact={true} element={<Search />} />
         </Routes>
-        {
-          isHeaderFooterShow===true && <Footer/>
-        }
-        {isOpenProductModal===true && <ProductModal />}
+
+        {isHeaderFooterShow === true && <Footer />}
+        {isOpenProductModal === true && <ProductModal />}
+
+        <ToastContainer
+          position="bottom-right"
+          newestOnTop
+          closeOnClick
+          pauseOnHover={false}
+          theme="light"
+        />
       </MyContext.Provider>
     </BrowserRouter>
   );
