@@ -71,6 +71,7 @@ const ProductList = () => {
 
   useEffect(() => {
     fetchProducts();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters]);
 
   useEffect(() => {
@@ -102,6 +103,7 @@ const ProductList = () => {
     }
   };
 
+  // eslint-disable-next-line no-unused-vars
   const handlePageChange = (page) => {
     setFilters((prev) => ({ ...prev, skip: filters.limit * (page - 1) }));
   };

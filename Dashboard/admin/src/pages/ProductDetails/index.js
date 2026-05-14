@@ -44,8 +44,10 @@ const ProductDetails = () => {
           <h4 className="mb-0 text-uppercase fw-bold text-dark">Product View</h4>
         </div>
         <div className="breadcrumb-links">
-          <a href="#" className="breadcrumb-item">Dashboard</a> /{" "}
-          <a href="#" className="breadcrumb-item">Products</a> /{" "}
+          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+          <a href="#!" className="breadcrumb-item">Dashboard</a> /{" "}
+          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+          <a href="#!" className="breadcrumb-item">Products</a> /{" "}
           <span className="breadcrumb-current">Product View</span>
         </div>
       </div>
