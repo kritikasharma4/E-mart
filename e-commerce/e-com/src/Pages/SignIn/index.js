@@ -4,8 +4,7 @@ import Logo from "../../Assets/images/e-com.png";
 import TextField from "@mui/material/TextField";
 import { Button } from "@mui/material";
 import { Link } from "react-router-dom";
-import { FaFacebookSquare } from "react-icons/fa";
-import { FaInstagramSquare } from "react-icons/fa";
+import { FaFacebookSquare, FaInstagramSquare } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 
 const SignIn = () => {
@@ -18,68 +17,61 @@ const SignIn = () => {
   }, []);
 
   return (
-    <section className="section signInPage">
+    <section className="signInPage">
       <div className="shape-bottom">
-        <svg fill="#fff" id="Layer_1" x="0px" y="0px" viewBox="0 0 1921 819.8">
-          <path
-            className="st0"
-            d="M1921,413.1v406.7H0V0.5h0.4l228.1,598.3c30,74.4,80.8,130.6,152.5,168.6c107.6,57,212.1,40.7,245.7,34.4 c22.4-4.2,54.9-13.1,97.5-26.6L1921,400.5V413.1z"
-          ></path>
+        <svg fill="#fff" viewBox="0 0 1921 819.8">
+          <path d="M1921,413.1v406.7H0V0.5h0.4l228.1,598.3c30,74.4,80.8,130.6,152.5,168.6c107.6,57,212.1,40.7,245.7,34.4 c22.4-4.2,54.9-13.1,97.5-26.6L1921,400.5V413.1z" />
         </svg>
       </div>
       <div className="container">
-        <div className="box card p-3 shadow border-0">
-          <div className="text-center">
-            <div className="auth-logo-wrapper text-center mb-3">
-              <img src={Logo} alt="Logo" className="auth-logo" />
+        <div className="box">
+          <div className="text-center mb-4">
+            <img src={Logo} alt="E-Mart" className="auth-logo" />
+          </div>
+          <h2>Welcome back</h2>
+          <p className="subtitle">Sign in to your E-Mart account</p>
+
+          <form>
+            <div className="form-group">
+              <TextField label="Email address" type="email" required variant="outlined" fullWidth size="small" />
+            </div>
+            <div className="form-group">
+              <TextField label="Password" required type="password" variant="outlined" fullWidth size="small" />
             </div>
 
-            <form>
-              <h2 className="mb-4">Sign In</h2>
-              <div className="form-group">
-                <TextField id="email-input" label="Email" required variant="standard" className="w-100" />
-              </div>
-              <div className="form-group">
-                <TextField id="password-input" label="Password" required type="password" variant="standard" className="w-100" />
-              </div>
+            {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+            <a className="forgot-link">Forgot your password?</a>
 
-              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-              <a className="border-effect cursor">Forgot Password?</a>
+            <Button className="action-button signin-main-btn" style={{ marginBottom: 10 }}>
+              Sign In
+            </Button>
+            <Link to="/">
+              <Button
+                variant="outlined"
+                className="action-button cancel-button"
+                onClick={() => context.setisHeaderFooterShow(true)}
+              >
+                Cancel
+              </Button>
+            </Link>
 
-              <div className="button-group">
-                <Button style={{ background: "#2bbef9", color: "#fff" }} className="action-button">
-                  Sign In
-                </Button>
-                <Link to="/">
-                  <Button variant="outlined" onClick={() => context.setisHeaderFooterShow(true)} className="action-button cancel-button">
-                    Cancel
-                  </Button>
-                </Link>
-              </div>
+            <div className="divider-text">or continue with</div>
 
-              <p className="txt">
-                Not Registered?{" "}
-                <Link to="/signUp" className="border-effect">Sign Up</Link>
-              </p>
+            <div className="social-icons">
+              <Link to="#" className="social-icon facebook" aria-label="Facebook"><FaFacebookSquare /></Link>
+              <Link to="#" className="social-icon instagram" aria-label="Instagram"><FaInstagramSquare /></Link>
+              <Link to="#" className="social-icon twitter" aria-label="Twitter"><FaXTwitter /></Link>
+            </div>
 
-              <h6 className="text-center" style={{ fontWeight: "bold" }}>
-                Or Continue with social account
-              </h6>
+            <button type="button" className="google-auth-button">
+              <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" className="google-icon" />
+              Sign in with Google
+            </button>
 
-              <div className="social-icons">
-                <Link to="#" className="social-icon facebook"><FaFacebookSquare /></Link>
-                <Link to="#" className="social-icon instagram"><FaInstagramSquare /></Link>
-                <Link to="#" className="social-icon twitter"><FaXTwitter /></Link>
-              </div>
-
-              <div className="google-signin-btn mt-3">
-                <button className="google-auth-button w-100">
-                  <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" className="google-icon" />
-                  <span className="google-button-text">Sign in with Google</span>
-                </button>
-              </div>
-            </form>
-          </div>
+            <p className="signup-link">
+              New to E-Mart? <Link to="/signUp">Create an account</Link>
+            </p>
+          </form>
         </div>
       </div>
     </section>

@@ -6,83 +6,66 @@ import { useContext } from "react";
 import { Link } from "react-router-dom";
 import { MyContext } from "../../App";
 
-const ProductItem = ({ product, itemView }) => {
+const ProductItem = ({ product }) => {
   const context = useContext(MyContext);
 
   if (!product) return null;
 
   const { _id, name, images, countInStock, rating, price, oldPrice } = product;
 
-  const discountPercentage =
-    oldPrice && price
+  const discountPct =
+    oldPrice && price < oldPrice
       ? Math.round(((oldPrice - price) / oldPrice) * 100)
       : null;
 
-  const handleExpandClick = (e) => {
-    e.preventDefault(); // prevents navigation
+  const handleExpand = (e) => {
+    e.preventDefault();
     context.setIsOpenProductModal(true);
-    context.setModalProduct?.(product); // optional: pass full product to modal
+    context.setModalProduct?.(product);
   };
 
-  const handleWishlistClick = (e) => {
+  const handleWishlist = (e) => {
     e.preventDefault();
-    // wishlist logic (optional)
   };
 
   return (
-    <Link to={`/product/${_id}`} className={`productItem ${itemView || ""}`}>
-      <div className="imgWrapper position-relative">
+    <Link to={`/product/${_id}`} className="productItem">
+      <div className="imgWrapper">
         <img
-          src={
-            images?.[0] || "https://via.placeholder.com/300x400?text=No+Image"
-          }
+          src={images?.[0] || "https://via.placeholder.com/300x400?text=No+Image"}
           alt={name || "Product"}
         />
-        {discountPercentage !== null && (
-          <span className="badge-custom">{discountPercentage}%</span>
+        {discountPct !== null && (
+          <span className="badge-custom">{discountPct}% OFF</span>
         )}
-
         <div className="actions">
-          <Button onClick={handleExpandClick}>
+          <Button onClick={handleExpand} title="Quick view">
             <BsArrowsFullscreen />
           </Button>
-          <Button onClick={handleWishlistClick}>
-            <FaRegHeart style={{ fontSize: "20px" }} />
+          <Button onClick={handleWishlist} title="Wishlist">
+            <FaRegHeart style={{ fontSize: "18px" }} />
           </Button>
         </div>
       </div>
 
       <div className="info">
         <h4>{name || "Unnamed Product"}</h4>
-        <span
-          className={`d-block ${
-            countInStock > 0 ? "text-success" : "text-danger"
-          }`}
-        >
+        <span className={`stock-badge ${countInStock > 0 ? "in" : "out"}`}>
           {countInStock > 0 ? "In Stock" : "Out of Stock"}
         </span>
         <Rating
-          className="mb-2 mt-2"
           name="rating-read"
           value={rating || 0}
           precision={0.5}
           readOnly
+          size="small"
+          style={{ display: "block", marginBottom: 4 }}
         />
-        <div className="d-flex">
-          {oldPrice && price < oldPrice ? (
-            <>
-              <span className="oldPrice me-2 text-muted text-decoration-line-through">
-                ₹{oldPrice.toFixed(2)}
-              </span>
-              <span className="netPrice text-danger fw-bold">
-                ₹{price.toFixed(2)}
-              </span>
-            </>
-          ) : (
-            <span className="netPrice text-dark fw-bold">
-              ₹{price.toFixed(2)}
-            </span>
+        <div className="prices">
+          {oldPrice && price < oldPrice && (
+            <span className="oldPrice">₹{oldPrice.toFixed(2)}</span>
           )}
+          <span className="netPrice">₹{price.toFixed(2)}</span>
         </div>
       </div>
     </Link>

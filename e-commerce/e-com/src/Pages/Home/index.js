@@ -5,7 +5,6 @@ import React, { useEffect, useState } from "react";
 import Slider from "react-slick";
 import ProductItem from "../../components/ProductItem";
 import HomeCat from "../../components/HomeCat";
-import { IoMailOpenOutline } from "react-icons/io5";
 import { fetchDataFromApi } from "../../utils/api";
 
 const NextArrow = ({ onClick }) => (
@@ -47,92 +46,100 @@ const Home = () => {
 
     fetchDataFromApi("/api/products?limit=20&skip=0").then((res) => {
       const all = res.products || [];
-      const nonFeatured = all.filter(p => !p.isFeatured);
-      setNewProducts(nonFeatured);
+      setNewProducts(all.filter(p => !p.isFeatured));
     });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <>
       <HomeBanner />
-      {catData?.length !== 0 && <HomeCat catData={catData} />}
+      {catData?.length > 0 && <HomeCat catData={catData} />}
 
       <section className="homeProducts">
         <div className="container">
-          <div className="row">
-            {/* Featured Products */}
-            <div className="col-md-3">
-              <img src="https://api.spicezgold.com/download/file_1734525757507_NewProject(34).jpg" alt="logo" className="cursor img-fluid" />
-            </div>
 
-            <div className="col-md-9 productRow">
-              <div className="d-flex align-items-center justify-content-between w-100 mb-3">
-                <div className="info">
-                  <h2 className="mb-0 hd">FEATURED PRODUCTS</h2>
-                  <p className="text-light text-sml mb-0">Do not miss the current offers until the end of June.</p>
+          {/* Featured Products */}
+          <div className="row align-items-start mb-5">
+            <div className="col-md-3 d-none d-md-block">
+              <div className="promoImg">
+                <img
+                  src="https://api.spicezgold.com/download/file_1734525757507_NewProject(34).jpg"
+                  alt="Featured promo"
+                />
+              </div>
+            </div>
+            <div className="col-md-9">
+              <div className="sectionHeader">
+                <div className="left">
+                  <span className="tag">Handpicked</span>
+                  <h2>Featured Products</h2>
+                  <p>Don't miss our current offers — limited time deals</p>
                 </div>
-                <Button className="viewAllBtn">View All <FaArrowRight /></Button>
+                <Button className="viewAllBtn">View All <FaArrowRight style={{ marginLeft: 6 }} /></Button>
               </div>
               <div className="product_row w-100">
                 <Slider {...sliderSettings}>
                   {featuredProducts.map(product => (
-                    <ProductItem key={product._id} product={product} />
+                    <div key={product._id} style={{ padding: "0 8px" }}>
+                      <ProductItem product={product} />
+                    </div>
                   ))}
                 </Slider>
               </div>
             </div>
+          </div>
 
-            {/* New Products */}
-            <div className="col-md-3 mt-5">
-              <img src="https://cmsimages.shoppersstop.com/CHOPARD_Web_b075612cad/CHOPARD_Web_b075612cad.jpg" alt="logo" className="cursor mb-3 img-fluid" />
-              <img src="https://api.spicezgold.com/download/file_1734525767798_NewProject(35).jpg" alt="logo" className="cursor mt-5 img-fluid" />
+          {/* New Arrivals */}
+          <div className="row align-items-start">
+            <div className="col-md-3 d-none d-md-block">
+              <div className="promoImg mb-3">
+                <img
+                  src="https://cmsimages.shoppersstop.com/CHOPARD_Web_b075612cad/CHOPARD_Web_b075612cad.jpg"
+                  alt="New arrivals promo"
+                />
+              </div>
+              <div className="promoImg">
+                <img
+                  src="https://api.spicezgold.com/download/file_1734525767798_NewProject(35).jpg"
+                  alt="New arrivals promo 2"
+                />
+              </div>
             </div>
-
-            <div className="col-md-9 productRow mt-5">
-              <div className="d-flex align-items-center justify-content-between w-100 mb-3">
-                <div className="info">
-                  <h2 className="mb-0 hd">NEW PRODUCTS</h2>
-                  <p className="text-light text-sml mb-0">Try something new THIS SUMMER!</p>
+            <div className="col-md-9">
+              <div className="sectionHeader">
+                <div className="left">
+                  <span className="tag">Just In</span>
+                  <h2>New Arrivals</h2>
+                  <p>Fresh picks added to our catalogue this season</p>
                 </div>
-                <Button className="viewAllBtn">View All <FaArrowRight /></Button>
+                <Button className="viewAllBtn">View All <FaArrowRight style={{ marginLeft: 6 }} /></Button>
               </div>
               <div className="product_row w-100">
                 <Slider {...sliderSettings}>
                   {newProducts.map(product => (
-                    <ProductItem key={product._id} product={product} />
+                    <div key={product._id} style={{ padding: "0 8px" }}>
+                      <ProductItem product={product} />
+                    </div>
                   ))}
                 </Slider>
               </div>
-
-              <div className="d-flex mt-4 mb-5 bannerSec">
-                <div className="banner">
-                  <img src="https://api.spicezgold.com/download/file_1734532742018_NewProject(22).jpg" alt="logo" className="cursor w-100" />
-                </div>
-                <div className="banner">
-                  <img src="https://i.pinimg.com/736x/17/50/c6/1750c64b06c2529747308b9b9c63cf04.jpg" alt="logo" className="cursor w-100" />
-                </div>
-              </div>
             </div>
           </div>
+
         </div>
       </section>
 
       {/* Newsletter */}
-      <section className="newsLetterSection mt-3 mb-3 d-flex align-items-center">
+      <section className="newsLetterSection">
         <div className="container">
-          <div className="row">
-            <div className="col-md-6">
-              <p className="text-white mb-1">$20 discount for your first order</p>
-              <h3 className="text-white">Join our newsletter and get...</h3>
-              <p className="text-light">Join our email subscription now to get updates <br /> on promotions and coupons.</p>
-              <form>
-                <IoMailOpenOutline />
-                <input type="text" placeholder="Your Email Address..." />
-                <Button style={{ color: "#fff" }}>Subscribe</Button>
-              </form>
-            </div>
-            <div className="col-md-6">
-              <img src="https://fullstack-ecommerce.netlify.app/static/media/newsletter.5931358dd220a40019fc.png" alt="logo" />
+          <div className="inner">
+            <span className="tag">Newsletter</span>
+            <h3>Get ₹200 off your first order</h3>
+            <p>Subscribe for exclusive deals, new arrivals, and early access to our biggest sales.</p>
+            <div className="input-wrap">
+              <input type="email" placeholder="Enter your email address..." />
+              <button type="button">Subscribe</button>
             </div>
           </div>
         </div>
