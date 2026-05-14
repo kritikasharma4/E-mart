@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import {
   List,
   ListItem,
@@ -24,12 +24,9 @@ import ListAltIcon from "@mui/icons-material/ListAlt";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
-import { MyContext } from "../../App";
-
 const Sidebar = () => {
   const [openProducts, setOpenProducts] = useState(false);
   const [openCategory, setOpenCategory] = useState(false);
-  const context = useContext(MyContext);
   const navigate = useNavigate();
 
   const handleProductsClick = () => {
