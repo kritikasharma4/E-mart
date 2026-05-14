@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Slider from "react-slick";
-import { FaArrowRight, FaArrowLeft } from "react-icons/fa";
+import { FaArrowRight, FaArrowLeft, FaTruck, FaShieldAlt, FaHeadset, FaGift } from "react-icons/fa";
 import HomeBanner from "../../components/HomeBanner";
 import HomeCat from "../../components/HomeCat";
 import ProductItem from "../../components/ProductItem";
@@ -22,6 +22,13 @@ const slickCfg = {
     { breakpoint: 500,  settings: { slidesToShow: 1 } },
   ],
 };
+
+const features = [
+  { icon: <FaTruck />, title: "Free Delivery", sub: "On orders above ₹999" },
+  { icon: <FaShieldAlt />, title: "Secure Payment", sub: "100% safe & protected" },
+  { icon: <FaHeadset />, title: "24/7 Support", sub: "Dedicated support team" },
+  { icon: <FaGift />, title: "Easy Returns", sub: "30-day hassle-free returns" },
+];
 
 const Home = () => {
   const [catData, setCatData] = useState([]);
@@ -47,62 +54,86 @@ const Home = () => {
       <HomeBanner />
       {catData.length > 0 && <HomeCat catData={catData} />}
 
+      {/* Feature strips */}
+      <div className="em-feature-strip">
+        <div className="em-container">
+          <div className="em-feature-grid">
+            {features.map((f, i) => (
+              <div key={i} className="em-feature-item">
+                <div className="em-feature-icon">{f.icon}</div>
+                <div>
+                  <div className="em-feature-title">{f.title}</div>
+                  <div className="em-feature-sub">{f.sub}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
       <div className="em-home-products">
         <div className="em-container">
 
           {/* Featured */}
-          <div style={{ display: "flex", gap: 24, marginBottom: 56, alignItems: "flex-start" }}>
-            <div style={{ width: 220, flexShrink: 0, display: "flex", flexDirection: "column", gap: 16 }}>
-              <div className="em-promo-img">
-                <img src="https://api.spicezgold.com/download/file_1734525757507_NewProject(34).jpg" alt="promo" />
-              </div>
+          <div className="em-section-head">
+            <div className="left">
+              <span className="em-section-tag">Handpicked</span>
+              <h2>Featured Products</h2>
+              <p>Don't miss our current offers — limited time</p>
             </div>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div className="em-section-head">
-                <div className="left">
-                  <span className="em-section-tag">Handpicked</span>
-                  <h2>Featured Products</h2>
-                  <p>Don't miss our current offers — limited time</p>
-                </div>
-                <a href="#featured" className="em-view-all">View All <FaArrowRight /></a>
+            <a href="#featured" className="em-view-all">View All <FaArrowRight /></a>
+          </div>
+          <div className="em-product-row" style={{ marginBottom: 56 }}>
+            <Slider {...slickCfg}>
+              {featured.map(p => (
+                <div key={p._id}><ProductItem product={p} /></div>
+              ))}
+            </Slider>
+          </div>
+
+          {/* Promo banner between sections */}
+          <div className="em-mid-promo">
+            <div className="em-mid-promo-card" style={{ background: "linear-gradient(135deg, #f97316 0%, #ea580c 100%)" }}>
+              <div className="em-mid-promo-text">
+                <span className="em-mid-promo-tag">Limited Time</span>
+                <h3>Up to 40% Off</h3>
+                <p>On electronics &amp; gadgets</p>
               </div>
-              <div className="em-product-row">
-                <Slider {...slickCfg}>
-                  {featured.map(p => (
-                    <div key={p._id}><ProductItem product={p} /></div>
-                  ))}
-                </Slider>
+              <div className="em-mid-promo-emoji">⚡</div>
+            </div>
+            <div className="em-mid-promo-card" style={{ background: "linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)" }}>
+              <div className="em-mid-promo-text">
+                <span className="em-mid-promo-tag">New Season</span>
+                <h3>Fashion Arrivals</h3>
+                <p>Men, Women &amp; Kids collections</p>
               </div>
+              <div className="em-mid-promo-emoji">👗</div>
+            </div>
+            <div className="em-mid-promo-card" style={{ background: "linear-gradient(135deg, #10b981 0%, #059669 100%)" }}>
+              <div className="em-mid-promo-text">
+                <span className="em-mid-promo-tag">Free Shipping</span>
+                <h3>Orders Over ₹999</h3>
+                <p>Delivered to your doorstep</p>
+              </div>
+              <div className="em-mid-promo-emoji">🚚</div>
             </div>
           </div>
 
           {/* New Arrivals */}
-          <div style={{ display: "flex", gap: 24, alignItems: "flex-start" }}>
-            <div style={{ width: 220, flexShrink: 0, display: "flex", flexDirection: "column", gap: 16 }}>
-              <div className="em-promo-img">
-                <img src="https://cmsimages.shoppersstop.com/CHOPARD_Web_b075612cad/CHOPARD_Web_b075612cad.jpg" alt="promo" />
-              </div>
-              <div className="em-promo-img">
-                <img src="https://api.spicezgold.com/download/file_1734525767798_NewProject(35).jpg" alt="promo" />
-              </div>
+          <div className="em-section-head">
+            <div className="left">
+              <span className="em-section-tag">Just In</span>
+              <h2>New Arrivals</h2>
+              <p>Fresh picks added this season</p>
             </div>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div className="em-section-head">
-                <div className="left">
-                  <span className="em-section-tag">Just In</span>
-                  <h2>New Arrivals</h2>
-                  <p>Fresh picks added this season</p>
-                </div>
-                <a href="#latest" className="em-view-all">View All <FaArrowRight /></a>
-              </div>
-              <div className="em-product-row">
-                <Slider {...slickCfg}>
-                  {latest.map(p => (
-                    <div key={p._id}><ProductItem product={p} /></div>
-                  ))}
-                </Slider>
-              </div>
-            </div>
+            <a href="#latest" className="em-view-all">View All <FaArrowRight /></a>
+          </div>
+          <div className="em-product-row">
+            <Slider {...slickCfg}>
+              {latest.map(p => (
+                <div key={p._id}><ProductItem product={p} /></div>
+              ))}
+            </Slider>
           </div>
 
         </div>

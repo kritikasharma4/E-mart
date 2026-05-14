@@ -461,13 +461,78 @@ img { display: block; max-width: 100%; }
 .em-arrow.prev { left: 0; }
 .em-arrow.next { right: 0; }
 
-.em-promo-img {
-  border-radius: var(--r-lg);
-  overflow: hidden;
-  box-shadow: var(--sh2);
-  height: 100%;
+/* ════════════════════════════════════════════
+   FEATURE STRIP
+═══════════════════════════════════════════ */
+.em-feature-strip {
+  background: #fff;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 20px 0;
 }
-.em-promo-img img { width: 100%; height: 100%; object-fit: cover; border-radius: var(--r-lg); }
+.em-feature-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.em-feature-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 16px;
+  border-right: 1px solid var(--border);
+}
+.em-feature-item:last-child { border-right: none; }
+.em-feature-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fff4eb, #ffe0c2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--brand);
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.em-feature-title { font-weight: 700; font-size: 14px; color: var(--text); }
+.em-feature-sub { font-size: 12px; color: #64748b; margin-top: 1px; }
+
+/* ════════════════════════════════════════════
+   MID-PAGE PROMO BANNER
+═══════════════════════════════════════════ */
+.em-mid-promo {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 48px;
+}
+.em-mid-promo-card {
+  border-radius: var(--r-lg);
+  padding: 28px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  overflow: hidden;
+  position: relative;
+  box-shadow: var(--sh2);
+}
+.em-mid-promo-text { color: #fff; }
+.em-mid-promo-tag {
+  display: inline-block;
+  background: rgba(255,255,255,0.25);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  padding: 2px 10px;
+  border-radius: 20px;
+  margin-bottom: 8px;
+}
+.em-mid-promo-text h3 { font-size: 20px; font-weight: 800; color: #fff; margin: 0 0 4px; }
+.em-mid-promo-text p { font-size: 13px; color: rgba(255,255,255,0.85); margin: 0; }
+.em-mid-promo-emoji { font-size: 52px; line-height: 1; opacity: 0.9; }
 
 /* ════════════════════════════════════════════
    PRODUCT CARD
@@ -1021,6 +1086,11 @@ img { display: block; max-width: 100%; }
   .em-search { display: none; }
   .em-header-search-mobile { display: flex !important; }
   .em-cart-info .em-cart-label { display: none; }
+  .em-feature-grid { grid-template-columns: repeat(2, 1fr); }
+  .em-feature-item { border-right: none; border-bottom: 1px solid var(--border); }
+  .em-feature-item:nth-child(2n) { border-bottom: 1px solid var(--border); }
+  .em-feature-item:last-child, .em-feature-item:nth-last-child(2) { border-bottom: none; }
+  .em-mid-promo { grid-template-columns: 1fr; }
 }
 @media (max-width: 576px)  {
   .em-grid-4, .em-grid-3 { grid-template-columns: repeat(2,1fr); }
